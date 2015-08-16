@@ -42,8 +42,6 @@
             }
         </script>
         <h:form id="calendarForm">
-            <p:growl id="msgs" showDetail="true"/>
-
             <h:outputText value="#{msg['fields.user']}:"/>
             <h:selectOneMenu value='#{fatmanDataHandlerBean.userId}'>
                 <f:selectItems value="#{fatmanUserHandlerBean.users}"/>
@@ -63,7 +61,7 @@
             <p:commandButton
                     value="#{msg['button.select']}"
                     ajax="false"
-                    update="msgs, linear"
+                    update="linear"
                     actionListener="#{fatmanDataHandlerBean.createLinearModel}"
                     icon="ui-icon-check"/>
 
