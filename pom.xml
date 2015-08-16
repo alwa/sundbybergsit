@@ -1,0 +1,353 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.sundbybergsit</groupId>
+    <artifactId>sundbybergsit</artifactId>
+    <packaging>pom</packaging>
+    <name>Sundbybergs IT</name>
+    <version>1.0.0-SNAPSHOT</version>
+    <inceptionYear>2011</inceptionYear>
+    <description>
+        This is the Sundbybergs IT project.
+        The server-side logic for all Sundbybergs IT services are included within this project.
+    </description>
+
+    <modules>
+        <module>fatman-applet</module>
+        <module>fatman-webapp</module>
+        <module>fatman-domain</module>
+        <module>sundbybergsit-transfer-objects</module>
+    </modules>
+    <properties>
+        <!--
+           Explicitly declaring the source encoding eliminates the following message:
+           [WARNING] Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+        -->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <version.junit>4.8.1</version.junit>
+    </properties>
+
+    <repositories>
+        <!-- Several key Java EE APIs and RIs are missing from the Maven Central Repository -->
+        <!-- The goal is to eventually eliminate the reliance on the JBoss repository -->
+        <repository>
+            <id>repository.jboss.org</id>
+            <name>JBoss Repository</name>
+            <url>http://repository.jboss.org/maven2</url>
+        </repository>
+        <repository>
+            <id>releases.repository.jboss.org</id>
+            <name>JBoss Releases</name>
+            <url>https://repository.jboss.org/nexus/content/repositories/releases/</url>
+        </repository>
+        <repository>
+            <id>prime-repo</id>
+            <name>PrimeFaces Maven Repository</name>
+            <url>http://repository.primefaces.org</url>
+            <layout>default</layout>
+        </repository>
+        <repository>
+            <id>java.net2</id>
+            <name>Java.Net Maven2 Repository, hosts the javaee-api dependency</name>
+            <url>http://download.java.net/maven/2</url>
+        </repository>
+        <repository>
+            <id>repository.maven</id>
+            <name>apache repo</name>
+            <url>http://repo1.maven.org/maven2</url>
+        </repository>
+        <repository>
+            <id>codehaus-snapshots</id>
+            <name>Codehaus Snapshots</name>
+            <url>http://nexus.codehaus.org/snapshots/</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>codehaus-snapshots</id>
+            <name>Codehaus Snapshots</name>
+            <url>http://nexus.codehaus.org/snapshots/</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </pluginRepository>
+    </pluginRepositories>
+
+    <distributionManagement>
+        <repository>
+            <id>inhouse</id>
+            <name>Sundbybergs IT - Releases</name>
+            <url>http://www.sundbybergsit.com:8080/Nexus/content/repositories/sundbybergsit-inhouse/</url>
+        </repository>
+        <snapshotRepository>
+            <id>inhouse.snapshot</id>
+            <name>Sundbybergs IT - Snapshots</name>
+            <url>http://www.sundbybergsit.com:8080/Nexus/content/repositories/sundbybergsit-inhouse-snapshot/</url>
+        </snapshotRepository>
+    </distributionManagement>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <!-- Bundled dependencies on TomEE, no need to declare JPA, EJB, etc-->
+                <groupId>org.apache.openejb</groupId>
+                <artifactId>javaee-api</artifactId>
+                <version>6.0-4</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.bval</groupId>
+                <artifactId>bval-extras</artifactId>
+                <version>0.4</version>
+            </dependency>
+            <!--Our internal dependencies-->
+            <dependency>
+                <groupId>com.sundbybergsit</groupId>
+                <artifactId>fatman-webapp</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>com.sundbybergsit</groupId>
+                <artifactId>fatman-domain</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>com.sundbybergsit</groupId>
+                <artifactId>fatman-applet</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>com.sundbybergsit</groupId>
+                <artifactId>data-transfer-objects</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
+            <!-- Logging -->
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>1.6.4</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.cxf</groupId>
+                <artifactId>cxf-bundle-jaxrs</artifactId>
+                <version>2.6.2</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.openejb</groupId>
+                <artifactId>tomee-embedded</artifactId>
+                <!--<version>1.6.0</version>-->
+                <version>1.5.1</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.openejb</groupId>
+                <artifactId>tomee-jaxrs</artifactId>
+                <!--<version>1.6.0</version>-->
+                <version>1.5.1</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.openejb</groupId>
+                <artifactId>openejb-cxf-rs</artifactId>
+                <version>4.5.1</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>2.0.1</version>
+            </dependency>
+            <!-- Commons lang, validation and stuff -->
+            <dependency>
+                <groupId>commons-lang</groupId>
+                <artifactId>commons-lang</artifactId>
+                <version>2.6</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>commons-collections</groupId>
+                <artifactId>commons-collections</artifactId>
+                <version>3.2.1</version>
+                <scope>provided</scope>
+            </dependency>
+            <!-- Datasource -->
+            <dependency>
+                <groupId>commons-dbcp</groupId>
+                <artifactId>commons-dbcp</artifactId>
+                <version>1.4</version>
+            </dependency>
+            <!-- SQL JDBC -->
+            <dependency>
+                <groupId>com.microsoft.sqlserver.jdbc</groupId>
+                <artifactId>sqljdbc4</artifactId>
+                <version>4.0</version>
+            </dependency>
+            <!-- Frameworks -->
+            <dependency>
+                <groupId>org.primefaces</groupId>
+                <artifactId>primefaces</artifactId>
+                <version>4.0</version>
+            </dependency>
+            <!-- Test frameworks -->
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>${version.junit}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-all</artifactId>
+                <version>1.8.4</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.arquillian</groupId>
+                <artifactId>arquillian-bom</artifactId>
+                <type>pom</type>
+                <version>1.0.3.Final</version>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.openejb</groupId>
+            <artifactId>javaee-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.bval</groupId>
+            <artifactId>bval-extras</artifactId>
+        </dependency>
+        <!-- Common annotations (e.g., @PostConstruct, @PreDestroy, @Generated, @Resource) -->
+        <!-- Language enhancements, validations -->
+        <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.microsoft.sqlserver.jdbc</groupId>
+            <artifactId>sqljdbc4</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <!-- Test dependencies -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <scm>
+        <connection>scm:svn:http://127.0.0.1/dummy</connection>
+        <developerConnection>scm:svn:https://127.0.0.1/dummy</developerConnection>
+        <tag>HEAD</tag>
+        <url>http://127.0.0.1/dummy</url>
+    </scm>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <!-- Set version number of the application in the manifest -->
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>buildnumber-maven-plugin</artifactId>
+                    <version>1.2</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-release-plugin</artifactId>
+                    <version>2.4</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.0</version>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.openejb.maven</groupId>
+                    <artifactId>tomee-maven-plugin</artifactId>
+                    <!--<version>1.6.0</version>-->
+                    <version>1.5.1</version>
+                    <configuration>
+                        <!--<tomeeVersion>1.6.0</tomeeVersion>-->
+                        <tomeeVersion>1.5.1</tomeeVersion>
+                        <tomeeClassifier>plus</tomeeClassifier>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.openejb.maven</groupId>
+                    <artifactId>tomee-embedded-maven-plugin</artifactId>
+                    <!--<version>1.6.0</version>-->
+                    <version>1.5.1</version>
+                    <dependencies>
+                        <dependency>
+                            <groupId>org.apache.openejb</groupId>
+                            <artifactId>tomee-jaxrs</artifactId>
+                            <!--<version>1.6.0</version>-->
+                            <version>1.5.1</version>
+                        </dependency>
+                    </dependencies>
+                </plugin>
+                <plugin>
+                    <groupId>com.googlecode.t7mp</groupId>
+                    <artifactId>maven-t7-plugin</artifactId>
+                    <version>0.9.7</version>
+                    <configuration>
+                        <tomcatHttpPort>8080</tomcatHttpPort>
+                        <tomcatShutdownPort>13245</tomcatShutdownPort>
+                        <!--<tomcatVersion>7.0.47</tomcatVersion>-->
+                        <tomcatVersion>7.0.37</tomcatVersion>
+                        <webapps>
+                            <webappArtifact>
+                                <groupId>org.apache.openejb</groupId>
+                                <artifactId>tomee-plus-webapp</artifactId>
+                                <!--<version>1.6.0</version>-->
+                                <version>1.5.1</version>
+                                <!-- TomEE version -->
+                                <contextPath>openejb</contextPath>
+                            </webappArtifact>
+                        </webapps>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-war-plugin</artifactId>
+                    <version>2.3</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+        <finalName>${project.artifactId}</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.7</source>
+                    <target>1.7</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="3.0" xmlns="http://java.sun.com/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation=" http://java.sun.com/xml/ns/javaee
+      http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
+
+    <display-name>Authentication</display-name>
+
+
+    <!-- Activate the JSF 2.0 servlet
+
+     Tell the context which URLs to process as facelets.
+    <servlet-mapping>
+        <servlet-name>Faces Servlet</servlet-name>
+        <url-pattern>*.jsf</url-pattern>
+    </servlet-mapping>
+    -->
+    <servlet>
+         <servlet-name>Faces Servlet</servlet-name>
+         <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
+         <load-on-startup>1</load-on-startup>
+     </servlet>
+    <servlet-mapping>
+        <servlet-name>Faces Servlet</servlet-name>
+        <url-pattern>*.jsf</url-pattern>
+    </servlet-mapping>
+
+    <!--&lt;!&ndash; This is an optional parameter, but it makes troubleshooting errors much easier.  &ndash;&gt;-->
+    <!--&lt;!&ndash; You may want to delete it before final deployment &ndash;&gt;-->
+    <!--<context-param>-->
+        <!--<param-name>facelets.DEVELOPMENT</param-name>-->
+        <!--<param-value>true</param-value>-->
+    <!--</context-param>-->
+
+    <!--<servlet>-->
+        <!--<servlet-name>CXFServletWS</servlet-name>-->
+        <!--<servlet-class>-->
+          	<!--org.apache.cxf.transport.servlet.CXFNonSpringServlet-->
+        <!--</servlet-class>-->
+        <!--<init-param>-->
+      		<!--<param-name>jaxws.serviceClasses</param-name>-->
+      		<!--<param-value>-->
+                  <!--com.sundbybergsit.authentication.AuthenticateResource-->
+              <!--</param-value>-->
+     	<!--</init-param>-->
+        <!-- registers contextual properties -->
+        <!--<init-param>-->
+         <!--<param-name>jaxrs.properties</param-name>-->
+         <!--<param-value>-->
+             <!--jaxrs.address=ws-->
+         <!--</param-value>-->
+        <!--</init-param>-->
+        <!--<load-on-startup>1</load-on-startup>-->
+      <!--</servlet>-->
+<!---->
+      <!--<servlet-mapping>-->
+        <!--<servlet-name>CXFServletWS</servlet-name>-->
+        <!--<url-pattern>/ws/**/*</url-pattern>-->
+      <!--</servlet-mapping>-->
+</web-app>

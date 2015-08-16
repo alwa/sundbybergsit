@@ -1,0 +1,328 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <name>Sundbybergs IT Fatman Resource web application</name>
+    <artifactId>fatman-webapp</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <inceptionYear>2010</inceptionYear>
+    <packaging>war</packaging>
+    <description>TODO!</description>
+
+    <parent>
+        <groupId>com.sundbybergsit</groupId>
+        <artifactId>sundbybergsit</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+    <repositories>
+        <repository>
+            <id>prime-repo</id>
+            <name>PrimeFaces Maven Repository</name>
+            <url>http://repository.primefaces.org</url>
+            <layout>default</layout>
+        </repository>
+        <repository>
+            <id>google-api-services</id>
+            <url>http://google-api-client-libraries.appspot.com/mavenrepo</url>
+        </repository>
+        <repository>
+            <id>sonatype-oss</id>
+            <url>https://oss.sonatype.org/content/groups/public</url>
+        </repository>
+    </repositories>
+
+    <properties>
+        <project.http.version>1.13.1-beta</project.http.version>
+        <project.oauth.version>1.13.1-beta</project.oauth.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <dependencies>
+        <!-- GOOGLE CHART  -->
+        <!--<dependency>-->
+        <!--<groupId>nz.co.kevindoran</groupId>-->
+        <!--<artifactId>google-charts-jsf</artifactId>-->
+        <!--<version>1.1-SNAPSHOT</version>-->
+        <!--<systemPath>${basedir}/lib/google-charts-jsf-1.1-SNAPSHOT.jar</systemPath>-->
+        <!--<scope>system</scope>-->
+        <!--<type>jar</type>-->
+        <!--</dependency>-->
+
+        <!-- Start: Google stuff-->
+        <!-- The main Google API Java client. Visit here for more information:
+          http://code.google.com/p/google-api-java-client
+      -->
+        <dependency>
+            <groupId>com.google.api-client</groupId>
+            <artifactId>google-api-client</artifactId>
+            <version>1.11.0-beta</version>
+        </dependency>
+        <dependency>
+            <!-- The Google OAuth Java client. Visit here for more info:
+                http://code.google.com/p/google-oauth-java-client/
+            -->
+            <groupId>com.google.oauth-client</groupId>
+            <artifactId>google-oauth-client</artifactId>
+            <version>1.11.0-beta</version>
+        </dependency>
+        <dependency>
+            <!-- The Google Http Java client. Visit here for more info:
+                http://code.google.com/p/google-http-java-client/
+            -->
+            <groupId>com.google.http-client</groupId>
+            <artifactId>google-http-client</artifactId>
+            <version>1.11.0-beta</version>
+        </dependency>
+        <dependency>
+            <!-- A generated library for Google+ APIs. Visit here for more info:
+                http://code.google.com/p/google-api-java-client/wiki/APIs#Google+_API
+            -->
+            <groupId>com.google.apis</groupId>
+            <artifactId>google-api-services-plus</artifactId>
+            <version>v1-rev22-1.8.0-beta</version>
+        </dependency>
+        <!--<dependency>-->
+        <!--<groupId>com.google.code.gson</groupId>-->
+        <!--<artifactId>gson</artifactId>-->
+        <!--<version>1.6</version>-->
+        <!--</dependency>-->
+        <dependency>
+            <groupId>com.google.http-client</groupId>
+            <artifactId>google-http-client-gson</artifactId>
+            <version>1.11.0-beta</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.oauth-client</groupId>
+            <artifactId>google-oauth-client-servlet</artifactId>
+            <version>1.11.0-beta</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>javax.servlet</groupId>
+                    <artifactId>servlet-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>javax.transaction</groupId>
+                    <artifactId>transaction-api</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <!-- End: Google stuff-->
+
+        <dependency>
+            <groupId>org.apache.openejb</groupId>
+            <artifactId>javaee-api</artifactId>
+            <version>6.0-4</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.sundbybergsit</groupId>
+            <artifactId>fatman-domain</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.sundbybergsit</groupId>
+            <artifactId>fatman-applet</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.sundbybergsit</groupId>
+            <artifactId>data-transfer-objects</artifactId>
+        </dependency>
+        <!-- Bundled with TomEE+ 1.5-->
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-bundle-jaxrs</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.primefaces</groupId>
+            <artifactId>primefaces</artifactId>
+        </dependency>
+
+        <!--
+        <dependency>
+            <groupId>com.sun.faces</groupId>
+            <artifactId>jsf-api</artifactId>
+            <version>2.0.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.faces</groupId>
+            <artifactId>jsf-impl</artifactId>
+            <version>2.0.0</version>
+            <scope>provided</scope>
+        </dependency>-->
+
+        <dependency>
+            <groupId>org.apache.myfaces.core</groupId>
+            <artifactId>myfaces-api</artifactId>
+            <version>2.1.8</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.myfaces.core</groupId>
+            <artifactId>myfaces-impl</artifactId>
+            <version>2.1.8</version>
+            <scope>provided</scope>
+        </dependency>
+
+
+        <!-- For embedded tests -->
+        <dependency>
+            <groupId>org.apache.openejb</groupId>
+            <artifactId>tomee-embedded</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.openejb</groupId>
+            <artifactId>openejb-cxf-rs</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.openejb</groupId>
+            <artifactId>tomee-jaxrs</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>hsqldb</groupId>
+            <artifactId>hsqldb</artifactId>
+            <version>1.8.0.7</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Start: To make file upload work -->
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>commons-fileupload</groupId>
+            <artifactId>commons-fileupload</artifactId>
+            <version>1.2.2</version>
+        </dependency>
+        <!-- End: To make file upload work -->
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <tasks>
+                                <!-- TODO: Extremely ugly way of getting the applet resources... -->
+                                <copy file="../sundbybergsit-transfer-objects/target/data-transfer-objects.jar"
+                                      todir="src/main/webapp/applet"/>
+                                <copy file="../fatman-applet/target/fatman-applet.jar" todir="src/main/webapp/applet"/>
+                            </tasks>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-war-plugin</artifactId>
+                <configuration>
+                    <goal>exploded</goal>
+                    <warName>SundbybergsITFatman</warName>
+                    <webappDirectory>target/exploded/SundbybergsITFatman.war</webappDirectory>
+                    <webResources>
+                        <!--<resource>-->
+                            <!--<directory>${project.basedir}/src/main/lib</directory>-->
+                            <!--<includes>-->
+                                <!--<include>**/*.*</include>-->
+                            <!--</includes>-->
+                        <!--</resource>-->
+                        <resource>
+                            <directory>${project.basedir}/src/main/webapp/applet</directory>
+                            <includes>
+                                <include>**/*.*</include>
+                            </includes>
+                            <filtering>false</filtering>
+                            <targetPath>applet</targetPath>
+                        </resource>
+                    </webResources>
+                </configuration>
+            </plugin>
+            <!--
+            <plugin>
+                <artifactId>maven-war-plugin</artifactId>
+                <configuration>
+                    <goal>exploded</goal>
+                    <warName>SundbybergsITFatman</warName>
+                    <webappDirectory>target/exploded/SundbybergsITFatman.war</webappDirectory>
+                    <webResources>
+                        <resource>
+                            <directory>${project.basedir}/src/main/webapp/applet</directory>
+                            <includes>
+                                <include>**/*.*</include>
+                            </includes>
+                            <filtering>false</filtering>
+                            <targetPath>applet</targetPath>
+                        </resource>
+                    </webResources>
+                    <archive>
+                        <manifestEntries>
+                            <Implementation-Build>${ buildNumber}</Implementation-Build>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
+        -->
+            <plugin>
+                <groupId>org.apache.openejb.maven</groupId>
+                <artifactId>tomee-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.openejb.maven</groupId>
+                <artifactId>tomee-embedded-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>com.googlecode.t7mp</groupId>
+                <artifactId>maven-t7-plugin</artifactId>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.cargo</groupId>
+                <artifactId>cargo-maven2-plugin</artifactId>
+                <version>1.4.4</version>
+                <configuration>
+
+                    <!-- Container configuration -->
+                    <container>
+                        <containerId>tomcat7x</containerId>
+                        <type>remote</type>
+                    </container>
+
+                    <!-- Configuration to use with the container (which will also configure the deployer) -->
+                    <configuration>
+                        <type>runtime</type>
+                        <properties>
+                            <cargo.remote.username>username</cargo.remote.username>
+                            <cargo.remote.password>password</cargo.remote.password>
+                        </properties>
+                    </configuration>
+
+                    <!-- Deployables configuration -->
+                    <deployables>
+                        <deployable>
+                            <groupId>com.sundbybergsit</groupId>
+                            <artifactId>fatman-webapp</artifactId>
+                            <type>war</type>
+                            <!--<properties>-->
+                            <!--<context>optional root context</context>-->
+                            <!--</properties>-->
+                            <pingURL>http://www.sundbybergsit.com</pingURL>
+                            <pingTimeout>20000</pingTimeout>
+                        </deployable>
+                    </deployables>
+
+                </configuration>
+
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

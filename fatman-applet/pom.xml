@@ -1,0 +1,28 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <name>Fatman Applet</name>
+    <artifactId>fatman-applet</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <inceptionYear>2009</inceptionYear>
+    <packaging>jar</packaging>
+    <description>The classic Fatman applet!</description>
+
+    <parent>
+        <groupId>com.sundbybergsit</groupId>
+        <artifactId>sundbybergsit</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.sundbybergsit</groupId>
+            <artifactId>data-transfer-objects</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-bundle-jaxrs</artifactId>
+        </dependency>
+    </dependencies>
+</project>
