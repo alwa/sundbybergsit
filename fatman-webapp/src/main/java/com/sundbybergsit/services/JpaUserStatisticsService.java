@@ -54,15 +54,14 @@ public class JpaUserStatisticsService implements UserStatisticsService {
     }
 
     @Override
-    public int thisMonthFatDiff(String userId) {
+    public int fatDiff(String userId, Date from, Date to) {
         Validate.notNull(userId);
         try {
-            return fatDiffSince(userId, lastMonth());
+            return fatDiffSince(userId, from, to);
         } catch (NoResultException e) {
             return 0;
         }
     }
-
 
     private int fatDiffSince(String userId, Date date) {
         Float startFatPercentage = entityManager.createQuery("select distinct firstEntry.fatPercentage from PersonDataDbEntry firstEntry where firstEntry.fatmanDbUser.username = :username and " +
@@ -73,16 +72,25 @@ public class JpaUserStatisticsService implements UserStatisticsService {
         Float endFatPercentage = entityManager.createQuery("select distinct lastEntry.fatPercentage from PersonDataDbEntry lastEntry where lastEntry.fatmanDbUser.username = :username and " +
                 "lastEntry.date = (select max(lastEntry2.date) from PersonDataDbEntry lastEntry2 where lastEntry2.fatmanDbUser.username = :username and lastEntry2.date >= :date)", Float.class)
                 .setParameter("username", userId)
-                .setParameter("date", date)
+                .setParameter("date", new java.sql.Date(date.getTime()))
                 .getSingleResult();
         return calculateDiffInPercentages(startFatPercentage, endFatPercentage);
     }
 
-
-    private java.sql.Date lastMonth() {
-        Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.MONTH, -1);
-        return new java.sql.Date(cal.getTime().getTime());
+    private int fatDiffSince(String userId, Date from, Date to) {
+        Float startFatPercentage = entityManager.createQuery("select distinct firstEntry.fatPercentage from PersonDataDbEntry firstEntry where firstEntry.fatmanDbUser.username = :username and " +
+                "firstEntry.date = (select min(firstEntry2.date) from PersonDataDbEntry firstEntry2 where firstEntry2.fatmanDbUser.username = :username and firstEntry2.date >= :from and firstEntry2.date <= :to)", Float.class)
+                .setParameter("username", userId)
+                .setParameter("from", new java.sql.Date(from.getTime()))
+                .setParameter("to", new java.sql.Date(to.getTime()))
+                .getSingleResult();
+        Float endFatPercentage = entityManager.createQuery("select distinct lastEntry.fatPercentage from PersonDataDbEntry lastEntry where lastEntry.fatmanDbUser.username = :username and " +
+                "lastEntry.date = (select max(lastEntry2.date) from PersonDataDbEntry lastEntry2 where lastEntry2.fatmanDbUser.username = :username and lastEntry2.date >= :from and lastEntry2.date <= :to)", Float.class)
+                .setParameter("username", userId)
+                .setParameter("from", new java.sql.Date(from.getTime()))
+                .setParameter("to", new java.sql.Date(to.getTime()))
+                .getSingleResult();
+        return calculateDiffInPercentages(startFatPercentage, endFatPercentage);
     }
 
     private java.sql.Date lastWeek() {

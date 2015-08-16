@@ -18,6 +18,8 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 import java.net.URI;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -61,9 +63,13 @@ public class FatmanDataResource {
             case ALL:
                 return personDataDbEntryRepository.findAllEntries(username);
             case THIS_MONTH:
-                return personDataDbEntryRepository.findAllEntriesThisMonth(username);
+                Calendar lastMonth = Calendar.getInstance();
+                lastMonth.set(Calendar.MONTH, -1);
+                return personDataDbEntryRepository.findAllEntries(username, lastMonth.getTime(), new Date());
             case THIS_WEEK:
-                return personDataDbEntryRepository.findAllEntriesThisWeek(username);
+                Calendar lastWeek = Calendar.getInstance();
+                lastWeek.add(Calendar.DAY_OF_MONTH, -7);
+                return personDataDbEntryRepository.findAllEntries(username, lastWeek.getTime(), new Date());
             default:
                 throw new UnsupportedOperationException("Unknown time period type: " + timePeriodType);
         }

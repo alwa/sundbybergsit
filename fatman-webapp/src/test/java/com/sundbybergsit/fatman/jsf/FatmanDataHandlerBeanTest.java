@@ -32,6 +32,7 @@ import static org.mockito.Mockito.*;
 public class FatmanDataHandlerBeanTest {
 
     private FatmanDataHandlerBean handler;
+
     @Mock
     private UserStatisticsService userStatisticsService;
     @Mock
@@ -60,15 +61,20 @@ public class FatmanDataHandlerBeanTest {
         handler.setService(fatmanDataService);
         handler.setUserRepository(userRepository);
         handler.setUserSettingsRepository(userSettingsRepository);
-        handler.setLinearModel(linearModel);
+        when(userRepository.findUserByUserName("some user")).thenReturn(new FatmanDbUser("some user", 120, new Date(0), "a", "a"));
         when(userSettingsRepository.findSettingsForUser(anyString())).thenReturn(dummySettings);
+
+        handler.setUserId("some user");
+        handler.setLinearModel(linearModel);
         doReturn(mock(FacesContext.class)).when(handler).getFacesContext();
     }
 
     @Test
     public void twentyEntriesInResultWhenRetrievingAllDataThatContainTwentyOneEntries() throws Exception {
-        when(personDataDbEntryRepository.findAllEntries(anyString())).thenReturn(createFakeEntries(21));
+        when(personDataDbEntryRepository.findAllEntries(anyString(), any(Date.class), any(Date.class))).thenReturn(createFakeEntries(21));
+
         handler.createLinearModel();
+
         verify(linearModel, times(3)).addSeries(lineChartSeriesCaptor.capture());
         List<LineChartSeries> allSeries = lineChartSeriesCaptor.getAllValues();
         assertThat(allSeries.size(), is(3));
@@ -77,8 +83,10 @@ public class FatmanDataHandlerBeanTest {
 
     @Test
     public void twentyEntriesInResultWhenRetrievingAllDataThatContainFortyEntries() throws Exception {
-        when(personDataDbEntryRepository.findAllEntries(anyString())).thenReturn(createFakeEntries(40));
+        when(personDataDbEntryRepository.findAllEntries(anyString(), any(Date.class), any(Date.class))).thenReturn(createFakeEntries(40));
+
         handler.createLinearModel();
+
         verify(linearModel, times(3)).addSeries(lineChartSeriesCaptor.capture());
         List<LineChartSeries> allSeries = lineChartSeriesCaptor.getAllValues();
         assertThat(allSeries.size(), is(3));
@@ -87,11 +95,13 @@ public class FatmanDataHandlerBeanTest {
 
     @Test
     public void createLinearModelMultiUsersMakesFakeEntriesWhenDataIsMissing() throws Exception {
-        when(personDataDbEntryRepository.findAllEntries(anyString())).thenReturn(Collections.<PersonDataDbEntry>emptyList());
+        when(personDataDbEntryRepository.findAllEntries(anyString(), any(Date.class), any(Date.class))).thenReturn(Collections.<PersonDataDbEntry>emptyList());
         when(userRepository.findUserByUserName("bla")).thenReturn(new FatmanDbUser("bla", 120, new Date(0), "a", "a"));
         when(userRepository.findUserByUserName("bla2")).thenReturn(new FatmanDbUser("bla2", 120, new Date(0), "a", "a"));
         handler.setSelectedUsers(Arrays.asList("bla", "bla2"));
+
         handler.createLinearModelMultiUsers();
+
         verify(linearModel, times(2)).addSeries(lineChartSeriesCaptor.capture());
         List<LineChartSeries> allSeries = lineChartSeriesCaptor.getAllValues();
         assertThat(allSeries.size(), is(2));

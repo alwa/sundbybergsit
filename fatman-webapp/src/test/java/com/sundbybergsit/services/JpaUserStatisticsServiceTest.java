@@ -2,6 +2,8 @@ package com.sundbybergsit.services;
 
 import org.junit.Test;
 
+import java.util.Date;
+
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
@@ -14,6 +16,14 @@ public class JpaUserStatisticsServiceTest {
         assertThat(result, is(-16));
         result = service.calculateDiffInPercentages(43.3F, 59.9F);
         assertThat(result, is(38));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void fatDiffNotOkayWithNullUsername() throws Exception {
+        JpaUserStatisticsService service = new JpaUserStatisticsService();
+        Date from = new Date();
+        Date to = new Date();
+        service.fatDiff(null, from, to);
     }
 
     @Test(expected = IllegalArgumentException.class)

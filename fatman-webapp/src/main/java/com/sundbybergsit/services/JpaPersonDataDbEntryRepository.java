@@ -36,22 +36,13 @@ public class JpaPersonDataDbEntryRepository implements PersonDataDbEntryReposito
     }
 
     @Override
-    public List<PersonDataDbEntry> findAllEntriesThisMonth(String username) {
+    public List<PersonDataDbEntry> findAllEntries(String username, Date from, Date to) {
         return entityManager.createQuery("select dataEntry from PersonDataDbEntry dataEntry where " +
-                "dataEntry.fatmanDbUser.username = :user and dataEntry.date >= :lastMonth order by dataEntry.date asc ", PersonDataDbEntry.class)
+                "dataEntry.fatmanDbUser.username = :user and dataEntry.date >= :from and dataEntry.date <= :to order by dataEntry.date asc ", PersonDataDbEntry.class)
                 .setParameter("user", username)
-                .setParameter("lastMonth", lastMonth())
+                .setParameter("from", new java.sql.Date(from.getTime()))
+                .setParameter("to", new java.sql.Date(to.getTime()))
                 .getResultList();
-    }
-
-    @Override
-    public List<PersonDataDbEntry> findAllEntriesThisWeek(String username) {
-        return entityManager.createQuery("select dataEntry from PersonDataDbEntry dataEntry where " +
-                "dataEntry.fatmanDbUser.username = :user and dataEntry.date >= :lastWeek order by dataEntry.date asc ", PersonDataDbEntry.class)
-                .setParameter("user", username)
-                .setParameter("lastWeek", lastWeek())
-                .getResultList();
-
     }
 
     private PersonDataDbEntry findEntry(String username, Date date) {
@@ -81,18 +72,6 @@ public class JpaPersonDataDbEntryRepository implements PersonDataDbEntryReposito
             LOGGER.info("Persisting new entry for user: {} and date: {}", data.getFatmanDbUser().getUsername(), data.getDate());
             entityManager.persist(data);
         }
-    }
-
-    private java.sql.Date lastMonth() {
-        Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.MONTH, -1);
-        return new java.sql.Date(cal.getTime().getTime());
-    }
-
-    private java.sql.Date lastWeek() {
-        Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.DAY_OF_MONTH, -7);
-        return new java.sql.Date(cal.getTime().getTime());
     }
 
 }

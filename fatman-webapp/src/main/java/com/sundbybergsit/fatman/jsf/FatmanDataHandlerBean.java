@@ -7,6 +7,7 @@ import com.sundbybergsit.objects.TimePeriodType;
 import com.sundbybergsit.services.*;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
+import org.primefaces.context.RequestContext;
 import org.primefaces.model.chart.CartesianChartModel;
 import org.primefaces.model.chart.LineChartSeries;
 import org.primefaces.model.chart.MeterGaugeChartModel;
@@ -24,10 +25,7 @@ import javax.inject.Inject;
 import javax.transaction.SystemException;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.List;
+import java.util.*;
 
 @RequestScoped
 @ManagedBean(name = "fatmanDataHandlerBean")
@@ -59,11 +57,10 @@ public class FatmanDataHandlerBean {
     private Float weightInKilograms;
     private Float fatPercentage;
     private Float waterPercentage;
-    private List<SelectItem> timeResolutions = Arrays.asList(
-            new SelectItem(TimePeriodType.ALL, "alla"),
-            new SelectItem(TimePeriodType.THIS_MONTH, "denna månad"),
-            new SelectItem(TimePeriodType.THIS_WEEK, "denna vecka"));
-    private TimePeriodType selectedTimeResolution = TimePeriodType.ALL;
+
+    private Date fromDate = lastWeek();
+
+    private Date toDate = new Date();
 
     @Min(0)
     @Max(3)
@@ -131,7 +128,8 @@ public class FatmanDataHandlerBean {
 
             List<PersonDataDbEntry> entries = new ArrayList<>(getPersonDataDbEntries());
 
-            final Calendar count = getStartPeriodDate(selectedTimeResolution);
+            final Calendar count = Calendar.getInstance();
+            count.setTime(fromDate);
 
             Calendar now = Calendar.getInstance();
 
@@ -157,60 +155,19 @@ public class FatmanDataHandlerBean {
 
     }
 
-    private Calendar getStartPeriodDate(TimePeriodType selectedTimeResolution) {
-        final Calendar count;
-        switch (selectedTimeResolution) {
-            case THIS_MONTH:
-                count = Calendar.getInstance();
-                count.set(Calendar.HOUR, 0);
-                count.set(Calendar.MINUTE, 0);
-                count.set(Calendar.SECOND, 0);
-                count.set(Calendar.MILLISECOND, 0);
-                count.add(Calendar.MONTH, -1);
-                return count;
-            case THIS_WEEK:
-                count = Calendar.getInstance();
-                count.set(Calendar.HOUR, 0);
-                count.set(Calendar.MINUTE, 0);
-                count.set(Calendar.SECOND, 0);
-                count.set(Calendar.MILLISECOND, 0);
-                count.add(Calendar.WEEK_OF_MONTH, -1);
-                return count;
-            case ALL:
-            default:
-                count = Calendar.getInstance();
-                count.set(Calendar.HOUR, 0);
-                count.set(Calendar.MINUTE, 0);
-                count.set(Calendar.SECOND, 0);
-                count.set(Calendar.MILLISECOND, 0);
-                count.add(Calendar.YEAR, -10);
-                return count;
-        }
-    }
-
     private List<PersonDataDbEntry> getPersonDataDbEntries() {
-        switch (selectedTimeResolution) {
-            case ALL:
-                List<PersonDataDbEntry> allEntries = personDataDbEntryRepository.findAllEntries(userId);
-                if (allEntries.size() > 20) {
-                    List<PersonDataDbEntry> interpolatedEntries = new ArrayList<>();
-                    int size = allEntries.size();
-                    interpolatedEntries.add(allEntries.get(0));
-                    for (int i = 1; i < 19; i++) {
-                        interpolatedEntries.add(allEntries.get(i * size / 20));
-                    }
-                    interpolatedEntries.add(allEntries.get(size - 1));
-                    return interpolatedEntries;
-                }
-                return allEntries;
-            case THIS_MONTH:
-                return personDataDbEntryRepository.findAllEntriesThisMonth(userId);
-            case THIS_WEEK:
-                return personDataDbEntryRepository.findAllEntriesThisWeek(userId);
-            default:
-                throw new IllegalArgumentException("Selection: " + selectedTimeResolution + " is not allowed!");
+        List<PersonDataDbEntry> allEntries = personDataDbEntryRepository.findAllEntries(userId, fromDate, toDate);
+        if (allEntries.size() > 20) {
+            List<PersonDataDbEntry> interpolatedEntries = new ArrayList<>();
+            int size = allEntries.size();
+            interpolatedEntries.add(allEntries.get(0));
+            for (int i = 1; i < 19; i++) {
+                interpolatedEntries.add(allEntries.get(i * size / 20));
+            }
+            interpolatedEntries.add(allEntries.get(size - 1));
+            return interpolatedEntries;
         }
-
+        return allEntries;
     }
 
     private void showInfoMessage(String message) {
@@ -396,33 +353,29 @@ public class FatmanDataHandlerBean {
     }
 
     private int getFatDiff() throws NoFatmanDataForUserException {
-        switch (selectedTimeResolution) {
-            case ALL:
-                return userStatisticsService.totalFatDiff(userId);
-            case THIS_MONTH:
-                return userStatisticsService.thisMonthFatDiff(userId);
-            case THIS_WEEK:
-                return userStatisticsService.thisWeekFatDiff(userId);
-            default:
-                throw new IllegalArgumentException("Illegal value: " + selectedTimeResolution);
-        }
-
+        return userStatisticsService.fatDiff(userId, fromDate, toDate);
     }
 
-    public TimePeriodType getSelectedTimeResolution() {
-        return selectedTimeResolution;
+    public Date getFromDate() {
+        return fromDate;
     }
 
-    public void setSelectedTimeResolution(TimePeriodType selectedTimeResolution) {
-        this.selectedTimeResolution = selectedTimeResolution;
+    private Date lastWeek() {
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DAY_OF_MONTH, -7);
+        return cal.getTime();
     }
 
-    public List<SelectItem> getTimeResolutions() {
-        return timeResolutions;
+    public void setFromDate(Date fromDate) {
+        this.fromDate = fromDate;
     }
 
-    public void setTimeResolutions(List<SelectItem> timeResolutions) {
-        this.timeResolutions = timeResolutions;
+    public Date getToDate() {
+        return toDate;
+    }
+
+    public void setToDate(Date toDate) {
+        this.toDate = toDate;
     }
 
     public List<String> getSelectedUsers() {
