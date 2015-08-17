@@ -30,7 +30,7 @@ public class PersonDataDbEntry extends PersistedEntity implements Comparable {
     @Column(name = "fatPercentage", nullable = false)
     private Float fatPercentage;
 
-    @Min(1)
+    @Min(0)
     @Max(100)
     @Column(name = "waterPercentage", nullable = false)
     private Float waterPercentage;

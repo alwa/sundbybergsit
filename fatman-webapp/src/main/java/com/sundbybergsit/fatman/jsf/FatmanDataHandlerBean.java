@@ -3,29 +3,29 @@ package com.sundbybergsit.fatman.jsf;
 import com.sundbybergsit.calculation.Calculator;
 import com.sundbybergsit.entities.FatmanDbUser;
 import com.sundbybergsit.entities.PersonDataDbEntry;
-import com.sundbybergsit.objects.TimePeriodType;
 import com.sundbybergsit.services.*;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
-import org.primefaces.context.RequestContext;
+import org.apache.commons.lang.Validate;
 import org.primefaces.model.chart.CartesianChartModel;
 import org.primefaces.model.chart.LineChartSeries;
 import org.primefaces.model.chart.MeterGaugeChartModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
-import javax.faces.model.SelectItem;
 import javax.inject.Inject;
 import javax.transaction.SystemException;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 @RequestScoped
 @ManagedBean(name = "fatmanDataHandlerBean")
@@ -51,12 +51,13 @@ public class FatmanDataHandlerBean {
     private FatmanLoginBean loginBean;
 
     private String displayName;
-    private java.util.Date date = new java.util.Date();
     @Max(value = 635, message = "Världens fetaste man vägde 635kg. Du kan inte vara fetare än så!")
     @Min(value = 40, message = "Väger du mindre än 40kg så är det bara att springa till BK direkt...")
     private Float weightInKilograms;
     private Float fatPercentage;
     private Float waterPercentage;
+
+    private Date date = new Date();
 
     private Date fromDate = lastWeek();
 
@@ -64,7 +65,7 @@ public class FatmanDataHandlerBean {
 
     @Min(0)
     @Max(3)
-    private Integer activityLevel;
+    private Integer activityLevel = 2;
 
     private MeterGaugeChartModel meterGaugeModel;
     private CartesianChartModel linearModel = new CartesianChartModel();
@@ -73,17 +74,25 @@ public class FatmanDataHandlerBean {
 
     public void create() throws SystemException {
         try {
+            Validate.notNull(loginBean, "loginBean must be set!");
+            Validate.notNull(weightInKilograms, "Weight must be set!");
+            Validate.notNull(fatPercentage, "Fat percentage must be set!");
+
             userId = loginBean.getUserId();
+            Validate.notNull(userId, "userId must be set!");
+
             FatmanDbUser user = userRepository.findUserByUserName(userId);
+            Validate.notNull(user, "user must be set!");
+
             displayName = user.getFirstName() + " " + user.getLastName();
             PersonDataDbEntry data = new PersonDataDbEntry(user, weightInKilograms, fatPercentage,
-                    waterPercentage, new java.sql.Date(date.getTime()), activityLevel);
+                    waterPercentage == null ? 0f : waterPercentage, new java.sql.Date(date.getTime()), activityLevel);
             personDataDbEntryRepository.save(data);
             LOGGER.info("Persisting new data entry: {}", data);
             createMeterGaugeModel();
             showInfoMessage("Hohoo, värdet sparades ned i databasen!");
         } catch (Exception e) {
-            LOGGER.error(e.getMessage());
+            LOGGER.error(String.format("Error: %s", e.getMessage()), e);
             showErrorMessage(e);
         }
     }

@@ -16,6 +16,7 @@ import org.primefaces.model.chart.CartesianChartModel;
 import org.primefaces.model.chart.LineChartSeries;
 
 import javax.faces.context.FacesContext;
+import javax.transaction.SystemException;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -51,6 +52,8 @@ public class FatmanDataHandlerBeanTest {
     private PersonDataDbEntryRepository personDataDbEntryRepository;
     @Captor
     private ArgumentCaptor<LineChartSeries> lineChartSeriesCaptor;
+    @Mock
+    private FatmanLoginBean loginBean;
 
     @Before
     public void setUp() throws Exception {
@@ -61,8 +64,10 @@ public class FatmanDataHandlerBeanTest {
         handler.setService(fatmanDataService);
         handler.setUserRepository(userRepository);
         handler.setUserSettingsRepository(userSettingsRepository);
+        handler.setLoginBean(loginBean);
         when(userRepository.findUserByUserName("some user")).thenReturn(new FatmanDbUser("some user", 120, new Date(0), "a", "a"));
         when(userSettingsRepository.findSettingsForUser(anyString())).thenReturn(dummySettings);
+        when(loginBean.getUserId()).thenReturn("some user");
 
         handler.setUserId("some user");
         handler.setLinearModel(linearModel);
@@ -94,6 +99,25 @@ public class FatmanDataHandlerBeanTest {
     }
 
     @Test
+    public void createWithRequiredFieldsPersists() throws SystemException {
+        handler.setFatPercentage(50.0f);
+        handler.setWeightInKilograms(80.0f);
+
+        handler.create();
+
+        verify(personDataDbEntryRepository).save(isA(PersonDataDbEntry.class));
+    }
+
+    @Test
+    public void createWithoutRequiredFieldsDoesNotPersist() throws SystemException {
+        handler.setFatPercentage(50.0f);
+
+        handler.create();
+
+        verifyZeroInteractions(personDataDbEntryRepository);
+    }
+
+    @Test
     public void createLinearModelMultiUsersMakesFakeEntriesWhenDataIsMissing() throws Exception {
         when(personDataDbEntryRepository.findAllEntries(anyString(), any(Date.class), any(Date.class))).thenReturn(Collections.<PersonDataDbEntry>emptyList());
         when(userRepository.findUserByUserName("bla")).thenReturn(new FatmanDbUser("bla", 120, new Date(0), "a", "a"));
@@ -117,6 +141,6 @@ public class FatmanDataHandlerBeanTest {
     }
 
     private PersonDataDbEntry stubPersonDataDbEntry(int count) {
-        return new PersonDataDbEntry(new FatmanDbUser("bla", 120, new Date(0), "a", "a"), 80, 80, 80, new Date(2013, 1, count), 3);
+        return new PersonDataDbEntry(new FatmanDbUser("bla", 120, new Date(0), "a", "a"), 80f, 80f, 80f, new Date(2013, 1, count), 3);
     }
 }
