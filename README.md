@@ -1,7 +1,7 @@
 # Sundbybergs IT
 
 ## Beskrivning
-Just nu så existerar bara en webapplikation: [Fatman](www.sundbybergsit.com)
+Just nu så existerar bara en webapplikation: [Fatman](http://ww.sundbybergsit.com)
 
 ## Beroenden
 - [TomEE Plus 1.5.2](http://openejb.apache.org/apache-tomee.html)
