@@ -1,6 +1,16 @@
-Kräver: TomEE Plus 1.5.2 (http://openejb.apache.org/apache-tomee.html)
+# Sundbybergs IT
 
-Konfiguration för att köra med SQL Server:
+## Beskrivning
+Just nu så existerar bara en webapplikation: [Fatman](www.sundbybergsit.com)
+
+## Beroenden
+- [TomEE Plus 1.5.2](http://openejb.apache.org/apache-tomee.html)
+- [Maven 3.2+](https://maven.apache.org/)
+- [JDK 8](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
+- MS SQL 2012+
+- MSSQL JDBC driver (4.0)
+
+## Setup
 Lägg till sqljdbc4.jar i $TomEE-Home$\lib
 
 <!-- OBSOLETE
