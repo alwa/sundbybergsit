@@ -1,9 +1,10 @@
-Kräver: TomEE Plus 1.0 (http://openejb.apache.org/apache-tomee.html)
+Kräver: TomEE Plus 1.5.2 (http://openejb.apache.org/apache-tomee.html)
 
 Konfiguration för att köra med SQL Server:
 Lägg till sqljdbc4.jar i $TomEE-Home$\lib
-Ändra $TomEE-Home$\conf\tomee.xml:
 
+<!-- OBSOLETE
+Ändra $TomEE-Home$\conf\tomee.xml:
 
 <Resource id="AccountDataSource" type="DataSource">
   JdbcDriver com.microsoft.sqlserver.jdbc.SQLServerDriver
@@ -21,3 +22,5 @@ Lägg till sqljdbc4.jar i $TomEE-Home$\lib
   Password *********
   JtaManaged true
 </Resource>
+
+-->
