@@ -17,17 +17,12 @@
 * specific language governing permissions and limitations
 * under the License.
 -->
-
-
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:p="http://primefaces.org/ui">
-
-<ui:composition template="layout/layout.xhtml">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                template="layout/layout.xhtml">
 
     <ui:param name="headline" value="#{msg['titles.fathistorymultiuser']}"/>
 
@@ -42,41 +37,46 @@
             }
         </script>
         <h:form>
-            <p:selectCheckboxMenu value="#{fatmanDataHandlerBean.selectedUsers}" label="#{msg['fields.user']}"
+            <p:selectCheckboxMenu value="#{multiUserHistoryBean.selectedUsers}" label="#{msg['fields.user']}"
                                   filter="true" filterText="Filter" filterMatchMode="startsWith"
                                   panelStyle="width:220px">
-                <f:selectItems value="#{fatmanUserHandlerBean.users}"/>
+                <f:selectItems value="#{multiUserHistoryBean.users}"/>
             </p:selectCheckboxMenu>
             <p:separator style="margin-bottom:10px"/>
 
             <p:dialog header="Valda användare" modal="true" showEffect="fade" hideEffect="fade" widgetVar="dlg"
                       resizable="false">
-                <p:dataList id="display" value="#{fatmanDataHandlerBean.selectedUsers}" var="user">
-                    #{fatmanUserHandlerBean.getFullName(user)}
+                <p:dataList id="display" value="#{multiUserHistoryBean.selectedUsers}" var="user">
+                    #{multiUserHistoryBean.getFullName(user)}
                 </p:dataList>
             </p:dialog>
             <h:outputText value="#{msg['titles.from']}:"/>
-            <p:calendar id="fromDateCalendar" value="#{fatmanDataHandlerBean.fromDate}" pattern="dd-MM-yyyy"
+            <p:calendar id="fromDateCalendar" value="#{multiUserHistoryBean.fromDate}" pattern="dd-MM-yyyy"
                         mask="true"/>
 
             <h:outputText value="#{msg['titles.to']}:"/>
-            <p:calendar id="toDateCalendar" value="#{fatmanDataHandlerBean.toDate}" pattern="dd-MM-yyyy" mask="true"/>
+            <p:calendar id="toDateCalendar" value="#{multiUserHistoryBean.toDate}" pattern="dd-MM-yyyy"
+                        mask="true"/>
 
             <p:commandButton
+                    id="selectButton"
                     value="#{msg['button.select']}"
                     ajax="false"
                     update="linear"
-                    actionListener="#{fatmanDataHandlerBean.createLinearModelMultiUsers}"
+                    actionListener="#{multiUserHistoryBean.load}"
                     icon="ui-icon-check"/>
 
             <p/>
-            <p:lineChart id="linear" value="#{fatmanDataHandlerBean.linearModel}"
-                         rendered="#{fatmanDataHandlerBean.linearModel != null}"
-                         animate="true"
-                         shadow="true"
-                         extender="customExtender" legendPosition="e"
-                         zoom="true"
-                         title="#{msg['titles.fathistorymultiuser']}" minY="10" maxY="50" style="height:300px"/>
+            <p:chart
+                    id="linear"
+                    type="line"
+                    model="#{multiUserHistoryBean.linearModel}"
+                    rendered="#{multiUserHistoryBean.linearModel != null}"
+                    animate="true"
+                    shadow="true"
+                    extender="customExtender" legendPosition="e"
+                    zoom="true"
+                    title="#{msg['titles.fathistorymultiuser']}" minY="10" maxY="50" style="height:300px"/>
 
             <p/>
         </h:form>
@@ -84,4 +84,3 @@
         <h:link value="#{msg['link.back.startpage']}" outcome="start"/>
     </ui:define>
 </ui:composition>
-</html>

@@ -19,17 +19,21 @@ specific language governing permissions and limitations under the License.
 
 <html>
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-  <title>Logga in via Google+</title>
-  <link rel="stylesheet" href="resources/css/style.css" type="text/css"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Logga in via Google+</title>
+    <link rel="stylesheet" href="resources/css/style.css" type="text/css"/>
 </head>
 <body>
-<header><h1>Logga in via Google+</h1></header>
+<header>
+    <h1>Logga in via Google+</h1>
+
+    <h2>Oooof. Just nu kämpar jag med att uppgradera alltihop så en del kanske inte funkar som det ska. Ha tålamod!</h2>
+</header>
 
 <div class="largerbox">
-   <%  if (Util.getFlow().loadCredential(session.getId()) == null) {   %>
-        <a class='login' href='connect'>Anslut!</a>
-       <% } else { %>
+    <% if (Util.getFlow().loadCredential(session.getId()) == null) { %>
+    <a class='login' href='connect'>Anslut!</a>
+    <% } else { %>
     <% response.sendRedirect("start.jsf"); %>
     <% } %>
 </div>

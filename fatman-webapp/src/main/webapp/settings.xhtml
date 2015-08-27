@@ -17,17 +17,12 @@
 * specific language governing permissions and limitations
 * under the License.
 -->
-
-
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:p="http://primefaces.org/ui">
-
-<ui:composition template="layout/layout.xhtml">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                template="layout/layout.xhtml">
 
     <ui:param name="headline" value="#{msg['titles.updateSettings']}"/>
 
@@ -46,7 +41,7 @@
 
         <h:form enctype="multipart/form-data">
             <p:fileUpload value="#{fileUploadController.phantomImage}" mode="simple"/>
-            <p:commandButton value="Submit" ajax="false"
+            <p:commandButton id="uploadPhantomImageButton" value="Submit" ajax="false"
                              actionListener="#{fileUploadController.uploadPhantomImage()}"/>
         </h:form>
 
@@ -63,7 +58,7 @@
 
         <h:form enctype="multipart/form-data">
             <p:fileUpload value="#{fileUploadController.fatImage}" mode="simple"/>
-            <p:commandButton value="Submit" ajax="false"
+            <p:commandButton id="uploadFatImageButton" value="Submit" ajax="false"
                              actionListener="#{fileUploadController.uploadFatImage()}"/>
         </h:form>
 
@@ -75,19 +70,18 @@
                 <p:selectBooleanCheckbox value="#{fatmanUserSettingsBean.showMyValuesToEveryone}"/>
             </h:panelGrid>
 
-            <h:commandButton action="#{fatmanUserSettingsBean.updateSettings()}" value="#{msg['button.update']}"/>
-            <h:commandButton action="#{fatmanUserSettingsBean.cancel()}" value="#{msg['button.cancel']}"/>
+            <h:commandButton id="updateButton" action="#{fatmanUserSettingsBean.updateSettings()}" value="#{msg['button.update']}"/>
+            <h:commandButton id="cancelButton" action="#{fatmanUserSettingsBean.cancel()}" value="#{msg['button.cancel']}"/>
         </h:form>
 
         <p/>
-        <h:link value="#{msg['link.to.history']}" outcome="historik"/>
+        <p:link value="#{msg['link.to.history']}" outcome="historik"/>
 
         <p/>
-        <h:link value="#{msg['link.to.createPersonDataEntry']}" outcome="createdata"/>
+        <p:link value="#{msg['link.to.createPersonDataEntry']}" outcome="createdata"/>
 
         <p/>
 
-        <h:link value="#{msg['link.back.startpage']}" outcome="start"/>
+        <p:link value="#{msg['link.back.startpage']}" outcome="start"/>
     </ui:define>
 </ui:composition>
-</html>

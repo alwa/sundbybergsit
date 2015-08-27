@@ -20,7 +20,52 @@
          xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
          metadata-complete="false"
          version="3.0">
+
+    <session-config>
+        <session-timeout>20</session-timeout>
+    </session-config>
+
     <display-name>Fatman</display-name>
+
+    <!-- Welcome files -->
+    <welcome-file-list>
+        <welcome-file>index.jsp</welcome-file>
+    </welcome-file-list>
+
+    <context-param>
+        <param-name>javax.faces.DEFAULT_SUFFIX</param-name>
+        <param-value>.xhtml</param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>facelets.DEVELOPMENT</param-name>
+        <param-value>true</param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>facelets.SKIP_COMMENTS</param-name>
+        <param-value>true</param-value>
+    </context-param>
+
+    <filter>
+        <filter-name>loginfilter</filter-name>
+        <filter-class>com.sundbybergsit.filters.LoginFilter</filter-class>
+    </filter>
+
+    <!--<filter>-->
+        <!--<filter-name>PrimeFaces FileUpload Filter</filter-name>-->
+        <!--<filter-class>org.primefaces.webapp.filter.FileUploadFilter</filter-class>-->
+    <!--</filter>-->
+
+    <filter-mapping>
+        <filter-name>loginfilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <!--<filter-mapping>-->
+        <!--<filter-name>PrimeFaces FileUpload Filter</filter-name>-->
+        <!--<url-pattern>/*</url-pattern>-->
+    <!--</filter-mapping>-->
 
     <servlet>
         <servlet-name>Faces Servlet</servlet-name>
@@ -30,36 +75,8 @@
     <servlet-mapping>
         <servlet-name>Faces Servlet</servlet-name>
         <url-pattern>*.jsf</url-pattern>
+        <url-pattern>*.xhtml</url-pattern>
     </servlet-mapping>
-
-    <filter>
-        <filter-name>loginfilter</filter-name>
-        <filter-class>com.sundbybergsit.filters.LoginFilter</filter-class>
-    </filter>
-
-    <filter-mapping>
-        <filter-name>loginfilter</filter-name>
-        <url-pattern>/*</url-pattern>
-    </filter-mapping>
-
-    <filter>
-
-        <filter-name>PrimeFaces FileUpload Filter</filter-name>
-
-        <filter-class>org.primefaces.webapp.filter.FileUploadFilter</filter-class>
-
-    </filter>
-
-    <filter-mapping>
-
-        <filter-name>PrimeFaces FileUpload Filter</filter-name>
-
-        <servlet-name>Faces Servlet</servlet-name>
-
-    </filter-mapping>
-
-
-
 
     <!-- Start: Google+ stuff  -->
     <servlet>

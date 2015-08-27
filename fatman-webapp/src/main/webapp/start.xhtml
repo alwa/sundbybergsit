@@ -17,16 +17,11 @@
 * specific language governing permissions and limitations
 * under the License.
 -->
-
-
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:p="http://primefaces.org/ui">
-
-<ui:composition template="layout/layout.xhtml">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                template="layout/layout.xhtml">
 
     <ui:param name="headline" value="#{msg['titles.startpage']}"/>
 
@@ -43,31 +38,37 @@
                 s.parentNode.insertBefore(po, s);
             })();
         </script>
-        <!--END Pre-requisites -->
 
         <h:panelGrid columns="1" style="text-align: center">
-            <h:graphicImage value="images/fatmangubbe.jpg"/>
+            <p:graphicImage value="images/fatmangubbe.jpg"/>
 
             <p/>
-            <h:link value="#{msg['link.to.createAccount']}" rendered="#{!fatmanUserHandlerBean.hasAccount()}" outcome="createaccount"/>
+            <p:link value="#{msg['link.to.createAccount']}" rendered="#{!fatmanUserHandlerBean.hasAccount()}"
+                    outcome="createaccount"/>
 
             <p/>
-            <h:link value="#{msg['link.to.fattestThisWeek']}" rendered="#{fatmanUserHandlerBean.hasAccount()}" outcome="fattest"/>
+            <p:link value="#{msg['link.to.fattestThisWeek']}" rendered="#{fatmanUserHandlerBean.hasAccount()}"
+                    outcome="fattest"/>
 
             <p/>
-            <h:link value="#{msg['link.to.mostPhantomThisWeek']}" rendered="#{fatmanUserHandlerBean.hasAccount()}" outcome="mostphantom"/>
+            <p:link value="#{msg['link.to.mostPhantomThisWeek']}" rendered="#{fatmanUserHandlerBean.hasAccount()}"
+                    outcome="mostphantom"/>
 
             <p/>
-            <h:link value="#{msg['link.to.updateSettings']}" rendered="#{fatmanUserHandlerBean.hasAccount()}" outcome="settings"/>
+            <p:link value="#{msg['link.to.updateSettings']}" rendered="#{fatmanUserHandlerBean.hasAccount()}"
+                    outcome="settings"/>
 
             <p/>
-            <h:link value="#{msg['link.to.createPersonDataEntry']}" rendered="#{fatmanUserHandlerBean.hasAccount()}" outcome="createdata"/>
+            <p:link value="#{msg['link.to.createPersonDataEntry']}" rendered="#{fatmanUserHandlerBean.hasAccount()}"
+                    outcome="createdata"/>
 
             <p/>
-            <h:link value="#{msg['link.to.history']}" rendered="#{fatmanUserHandlerBean.hasAccount()}" outcome="historik"/>
+            <p:link value="#{msg['link.to.history']}" rendered="#{fatmanUserHandlerBean.hasAccount()}"
+                    outcome="historik"/>
 
             <p/>
-            <h:link value="#{msg['link.to.fathistorymultiuser']}" rendered="#{fatmanUserHandlerBean.hasAccount()}" outcome="fetthistorikmultiuser"/>
+            <p:link value="#{msg['link.to.fathistorymultiuser']}" rendered="#{fatmanUserHandlerBean.hasAccount()}"
+                    outcome="fetthistorikmultiuser"/>
         </h:panelGrid>
 
         <!-- Place this asynchronous JavaScript just before your </body> tag -->
@@ -83,4 +84,3 @@
         </script>
     </ui:define>
 </ui:composition>
-</html>

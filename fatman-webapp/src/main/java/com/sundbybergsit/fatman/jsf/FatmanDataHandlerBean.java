@@ -13,23 +13,27 @@ import org.primefaces.model.chart.MeterGaugeChartModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
+import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.transaction.SystemException;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-@RequestScoped
 @ManagedBean(name = "fatmanDataHandlerBean")
-public class FatmanDataHandlerBean {
+public class FatmanDataHandlerBean implements Serializable {
+
     private static final Logger LOGGER = LoggerFactory.getLogger(FatmanDataHandlerBean.class);
 
     @Inject
@@ -59,20 +63,16 @@ public class FatmanDataHandlerBean {
 
     private Date date = new Date();
 
-    private Date fromDate = lastWeek();
-
-    private Date toDate = new Date();
-
     @Min(0)
     @Max(3)
     private Integer activityLevel = 2;
 
     private MeterGaugeChartModel meterGaugeModel;
-    private CartesianChartModel linearModel = new CartesianChartModel();
-    private String userId;
-    private List<String> selectedUsers;
 
-    public void create() throws SystemException {
+    private String userId;
+
+    @PostConstruct
+    public void init() {
         try {
             Validate.notNull(loginBean, "loginBean must be set!");
             Validate.notNull(weightInKilograms, "Weight must be set!");
@@ -85,6 +85,17 @@ public class FatmanDataHandlerBean {
             Validate.notNull(user, "user must be set!");
 
             displayName = user.getFirstName() + " " + user.getLastName();
+        } catch (Exception e) {
+            LOGGER.error(String.format("Error: %s", e.getMessage()), e);
+            showErrorMessage(e);
+        }
+    }
+
+    public void create() throws SystemException {
+        try {
+            FatmanDbUser user = userRepository.findUserByUserName(userId);
+            Validate.notNull(user, "user must be set!");
+
             PersonDataDbEntry data = new PersonDataDbEntry(user, weightInKilograms, fatPercentage,
                     waterPercentage == null ? 0f : waterPercentage, new java.sql.Date(date.getTime()), activityLevel);
             personDataDbEntryRepository.save(data);
@@ -95,88 +106,6 @@ public class FatmanDataHandlerBean {
             LOGGER.error(String.format("Error: %s", e.getMessage()), e);
             showErrorMessage(e);
         }
-    }
-
-    public void createLinearModel() {
-        linearModel.clear();
-        LineChartSeries waterSeries = new LineChartSeries();
-        waterSeries.setLabel("Vatten");
-        LineChartSeries fatSeries = new LineChartSeries();
-        fatSeries.setLabel("Fett");
-        fatSeries.setMarkerStyle("diamond");
-
-        LineChartSeries weightSeries = new LineChartSeries();
-        weightSeries.setLabel("Vikt");
-
-        List<PersonDataDbEntry> entries = getPersonDataDbEntries();
-        for (PersonDataDbEntry entry : entries) {
-            weightSeries.set(entry.getDate(), entry.getWeight());
-            fatSeries.set(entry.getDate(), entry.getFatPercentage());
-            waterSeries.set(entry.getDate(), entry.getWaterPercentage());
-        }
-        linearModel.addSeries(weightSeries);
-        linearModel.addSeries(fatSeries);
-        linearModel.addSeries(waterSeries);
-
-        if (!userSettingsRepository.findSettingsForUser(userId).getShowDataToEveryone()) {
-            showWarnMessage("Obs: Dina värden syns inte för någon annan användare");
-        }
-        showInfoMessage(createFatmanComment());
-    }
-
-    // Multiple charts
-    public void createLinearModelMultiUsers() {
-        linearModel.clear();
-
-        for (String user : selectedUsers) {
-            userId = user;
-            FatmanDbUser fatmanUser = userRepository.findUserByUserName(userId);
-            LineChartSeries fatSeries = new LineChartSeries();
-            fatSeries.setLabel(fatmanUser.getFirstName());
-            fatSeries.setMarkerStyle("diamond");
-
-            List<PersonDataDbEntry> entries = new ArrayList<>(getPersonDataDbEntries());
-
-            final Calendar count = Calendar.getInstance();
-            count.setTime(fromDate);
-
-            Calendar now = Calendar.getInstance();
-
-            while (count.before(now)) {
-                PersonDataDbEntry entry = (PersonDataDbEntry) CollectionUtils.find(entries, new Predicate() {
-                    @Override
-                    public boolean evaluate(Object o) {
-                        PersonDataDbEntry entry = (PersonDataDbEntry) o;
-                        return entry.getDate().before(count.getTime());
-                    }
-                });
-                if (entry == null) {
-                    fatSeries.set(count.getTime(), 99.9);
-                } else {
-                    entries.remove(entry);
-                    fatSeries.set(entry.getDate(), entry.getFatPercentage());
-                }
-                count.add(Calendar.DAY_OF_MONTH, 1);
-            }
-
-            linearModel.addSeries(fatSeries);
-        }
-
-    }
-
-    private List<PersonDataDbEntry> getPersonDataDbEntries() {
-        List<PersonDataDbEntry> allEntries = personDataDbEntryRepository.findAllEntries(userId, fromDate, toDate);
-        if (allEntries.size() > 20) {
-            List<PersonDataDbEntry> interpolatedEntries = new ArrayList<>();
-            int size = allEntries.size();
-            interpolatedEntries.add(allEntries.get(0));
-            for (int i = 1; i < 19; i++) {
-                interpolatedEntries.add(allEntries.get(i * size / 20));
-            }
-            interpolatedEntries.add(allEntries.get(size - 1));
-            return interpolatedEntries;
-        }
-        return allEntries;
     }
 
     private void showInfoMessage(String message) {
@@ -242,14 +171,6 @@ public class FatmanDataHandlerBean {
         this.date = date;
     }
 
-    public CartesianChartModel getLinearModel() {
-        return linearModel;
-    }
-
-    public void setLinearModel(CartesianChartModel linearModel) {
-        this.linearModel = linearModel;
-    }
-
     public void createMeterGaugeModel() {
         List<Number> intervals = new ArrayList<Number>() {{
             add(18.5);
@@ -273,6 +194,7 @@ public class FatmanDataHandlerBean {
 //                };
         Number bmi = bmiCalculator.calculate(user, weightInKilograms);
         meterGaugeModel = new MeterGaugeChartModel(bmi, intervals);
+        meterGaugeModel.setTitle("BMI");
     }
 
     /* BMI = Kroppsvikt /( Längden * Längden) = kg/m*m */
@@ -347,52 +269,6 @@ public class FatmanDataHandlerBean {
         this.userId = userId;
         FatmanDbUser user = userRepository.findUserByUserName(userId);
         displayName = user.getFirstName() + " " + user.getLastName();
-    }
-
-    public String createFatmanComment() {
-        if (userId == null) {
-            return "";
-        }
-        try {
-            int fatPercentageDiff = getFatDiff();
-            return fatPercentageDiff > 0 ? displayName + " är fetare än när hen började. SKAM!" : displayName + " har tappat " + Math.abs(fatPercentageDiff) + "% fett totalt!";
-        } catch (NoFatmanDataForUserException e) {
-            return "Det finns ingenting att säga ännu eftersom det inte finns tillräckligt med data";
-        }
-    }
-
-    private int getFatDiff() throws NoFatmanDataForUserException {
-        return userStatisticsService.fatDiff(userId, fromDate, toDate);
-    }
-
-    public Date getFromDate() {
-        return fromDate;
-    }
-
-    private Date lastWeek() {
-        Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.DAY_OF_MONTH, -7);
-        return cal.getTime();
-    }
-
-    public void setFromDate(Date fromDate) {
-        this.fromDate = fromDate;
-    }
-
-    public Date getToDate() {
-        return toDate;
-    }
-
-    public void setToDate(Date toDate) {
-        this.toDate = toDate;
-    }
-
-    public List<String> getSelectedUsers() {
-        return selectedUsers;
-    }
-
-    public void setSelectedUsers(List<String> selectedUsers) {
-        this.selectedUsers = selectedUsers;
     }
 
     public void setUserRepository(UserRepository userRepository) {

@@ -27,7 +27,7 @@ import java.util.List;
  *         <p/>
  *         From example @ http://svn.apache.org/viewvc/cxf/trunk/distribution/src/main/release/samples/jax_rs/basic/src/main/java/demo/jaxrs/server/CustomerService.java?view=markup
  */
-@Path("/ws/fatmandataservice")
+@Path("/fatmandataservice")
 @Features(features = "org.apache.cxf.feature.LoggingFeature")
 @Produces({"text/xml", "application/json"})
 public class FatmanDataResource {

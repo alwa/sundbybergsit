@@ -15,14 +15,15 @@ import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.inject.Inject;
 import javax.transaction.SystemException;
+import java.io.Serializable;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-@RequestScoped
 @ManagedBean(name = "fatmanUserHandlerBean")
-public class FatmanUserHandlerBean {
+public class FatmanUserHandlerBean implements Serializable {
+
     private static final Logger LOGGER = LoggerFactory.getLogger(FatmanUserHandlerBean.class);
 
     @Inject
@@ -65,8 +66,14 @@ public class FatmanUserHandlerBean {
     }
 
     public boolean hasAccount() {
+        LOGGER.info("hasAccount()");
+
         username = loginBean.getUserId();
-        return userRepository.existsUser(username);
+        boolean userExists = userRepository.existsUser(username);
+        if (!userExists) {
+            LOGGER.error(String.format("User %s does not exist", username));
+        }
+        return userExists;
     }
 
     public String getUsername() {

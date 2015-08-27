@@ -17,17 +17,12 @@
 * specific language governing permissions and limitations
 * under the License.
 -->
-
-
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:p="http://primefaces.org/ui">
-
-<ui:composition template="layout/layout.xhtml">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                template="layout/layout.xhtml">
 
     <ui:param name="headline" value="#{msg['titles.history']}"/>
 
@@ -43,45 +38,47 @@
         </script>
         <h:form id="calendarForm">
             <h:outputText value="#{msg['fields.user']}:"/>
-            <h:selectOneMenu value='#{fatmanDataHandlerBean.userId}'>
-                <f:selectItems value="#{fatmanUserHandlerBean.users}"/>
+            <h:selectOneMenu value='#{singleUserHistoryBean.userId}'>
+                <f:selectItems value="#{singleUserHistoryBean.users}"/>
             </h:selectOneMenu>
             <h:outputText value="#{msg['titles.from']}:"/>
             <p:calendar id="fromDateCalendar"
-                        value="#{fatmanDataHandlerBean.fromDate}"
+                        value="#{singleUserHistoryBean.fromDate}"
                         pattern="yyyy-MM-dd"
                         mask="true"/>
 
             <h:outputText value="#{msg['titles.to']}:"/>
             <p:calendar id="toDateCalendar"
-                        value="#{fatmanDataHandlerBean.toDate}"
+                        value="#{singleUserHistoryBean.toDate}"
                         pattern="yyyy-MM-dd"
                         mask="true"/>
 
             <p:commandButton
+                    id="selectButton"
                     value="#{msg['button.select']}"
                     ajax="false"
                     update="linear"
-                    actionListener="#{fatmanDataHandlerBean.createLinearModel}"
+                    actionListener="#{singleUserHistoryBean.load}"
                     icon="ui-icon-check"/>
 
             <p/>
             <p:panel>
-                <p:lineChart id="linear" value="#{fatmanDataHandlerBean.linearModel}"
-                             rendered="#{fatmanDataHandlerBean.linearModel != null}"
-                             animate="true"
-                             shadow="true"
-                             seriesColors="FF0000,FFFF00,0000FF"
-                             extender="customExtender" legendPosition="e"
-                             zoom="true"
-                             title='#{fatmanDataHandlerBean.displayName}' minY="10" maxY="100" style="height:300px"/>
+                <p:chart
+                        id="linear"
+                         type="line"
+                         model="#{singleUserHistoryBean.linearModel}"
+                         rendered="#{singleUserHistoryBean.linearModel != null}"
+                         animate="true"
+                         shadow="true"
+                         seriesColors="FF0000,FFFF00,0000FF"
+                         extender="customExtender" legendPosition="e"
+                         zoom="true"
+                         title='#{singleUserHistoryBean.displayName}' minY="10" maxY="100" style="height:300px"/>
             </p:panel>
         </h:form>
-
 
         <p/>
         <h:link value="#{msg['link.back.startpage']}" outcome="start"/>
 
     </ui:define>
 </ui:composition>
-</html>

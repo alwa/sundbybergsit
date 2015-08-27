@@ -17,17 +17,12 @@
 * specific language governing permissions and limitations
 * under the License.
 -->
-
-
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:p="http://primefaces.org/ui">
-
-<ui:composition template="layout/layout.xhtml">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                template="layout/layout.xhtml">
 
     <ui:param name="headline" value="#{msg['titles.mostphantom.thisWeek']}"/>
 
@@ -48,12 +43,12 @@
                                 height="500px"
                                 width="500px"
                                 rendered="#{imageBean.phantomImage != null}">
-                    <f:param name="userId" value="#{fatmanAnalyticsBean.getMostPhantomManThisWeek().getUsername()}"/>
+                    <f:param name="userId"
+                             value="#{fatmanAnalyticsBean.getMostPhantomManThisWeek().getUsername()}"/>
                 </p:graphicImage>
             </h:panelGroup>
         </h:panelGrid>
 
-        <h:link value="#{msg['link.back.startpage']}" outcome="start"/>
+        <p:link value="#{msg['link.back.startpage']}" outcome="start"/>
     </ui:define>
 </ui:composition>
-</html>

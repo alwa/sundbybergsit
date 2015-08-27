@@ -26,7 +26,7 @@ import java.util.List;
  *         <p/>
  *         From example @ http://svn.apache.org/viewvc/cxf/trunk/distribution/src/main/release/samples/jax_rs/basic/src/main/java/demo/jaxrs/server/CustomerService.java?view=markup
  */
-@Path("/ws/fatmanuserservice")
+@Path("/fatmanuserservice")
 @Features(features = "org.apache.cxf.feature.LoggingFeature")
 @Produces("application/json")
 @Consumes("application/json")

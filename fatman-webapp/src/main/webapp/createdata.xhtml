@@ -17,14 +17,11 @@
 * specific language governing permissions and limitations
 * under the License.
 -->
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:p="http://primefaces.org/ui">
-
-<ui:composition template="layout/layout.xhtml">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                template="layout/layout.xhtml">
 
     <ui:param name="headline" value="#{msg['titles.createPersonDataEntry']}"/>
 
@@ -76,18 +73,27 @@
                     <p:message for="activityInput" display=""/>
                 </h:panelGroup>
             </h:panelGrid>
-            <h:commandButton action="#{fatmanDataHandlerBean.create()}" value="#{msg['button.create']}"/>
+            <p:commandButton
+                    id="createDataButton"
+                    value="#{msg['button.create']}"
+                    actionListener="#{fatmanDataHandlerBean.create}"
+                    ajax="false"
+                    update="meterGaugeChart"
+                    />
         </h:form>
 
         <p/>
-        <p:meterGaugeChart id="custom" rendered="#{fatmanDataHandlerBean.meterGaugeModel != null}"
-                           value="#{fatmanDataHandlerBean.meterGaugeModel}" showTickLabels="false"
-                           labelHeightAdjust="110" intervalOuterRadius="130"
-                           seriesColors="93b75f, 66cc66, E7E658, cc6666" style="width:400px;height:250px"
-                           title="#{fatmanDataHandlerBean.fatLevelComment}" label="#{msg['titles.bmi']}"/>
+        <p:chart
+                id="meterGaugeChart"
+                type="meterGaugeChart"
+                model="#{fatmanDataHandlerBean.meterGaugeModel}"
+                rendered="#{fatmanDataHandlerBean.meterGaugeModel != null}"
+                showTickLabels="false"
+                labelHeightAdjust="110" intervalOuterRadius="130"
+                seriesColors="93b75f, 66cc66, E7E658, cc6666" style="width:400px;height:250px"
+                title="#{fatmanDataHandlerBean.fatLevelComment}" label="#{msg['titles.bmi']}"/>
 
         <p/>
         <h:link value="#{msg['link.back.startpage']}" outcome="start"/>
     </ui:define>
 </ui:composition>
-</html>
