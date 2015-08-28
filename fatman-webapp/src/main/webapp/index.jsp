@@ -38,7 +38,7 @@ specific language governing permissions and limitations under the License.
         <li>Göra en klassisk "fatman"-graf med skamlighetsnivåer</li>
         <li>Möjligtvis införa Fatman-figuren (ej utrett)</li>
     </ul>
-    Klagomål går att rapportera <a href="https://github.com/alwa/sundbybergsit">här</a>.
+    Klagomål går att rapportera <a href="https://github.com/alwa/sundbybergsit/issues">här</a>.
     Skaffa ett konto och meddela mig så tilldelar jag behörighet att gnälla.
 </header>
 
