@@ -22,6 +22,8 @@ import java.io.Serializable;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalAccessor;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -59,7 +61,7 @@ public class MultiUserHistoryBean implements Serializable {
 
     private Date toDate = new Date();
 
-    private LineChartModel linearModel = new LineChartModel();
+    private LineChartModel linearModel;
     private String userId;
     private List<String> selectedUsers = new ArrayList<>();
 
@@ -76,6 +78,17 @@ public class MultiUserHistoryBean implements Serializable {
         Validate.notNull(user, "user must be set!");
 
         displayName = user.getFirstName() + " " + user.getLastName();
+
+        linearModel = new LineChartModel();
+        linearModel.setShadow(true);
+        linearModel.setAnimate(true);
+        linearModel.setExtender("customExtender");
+        linearModel.setZoom(true);
+        linearModel.setLegendPosition("e");
+        LinearAxis yAxis = new LinearAxis();
+        yAxis.setMin(10);
+        yAxis.setMax(50);
+        linearModel.getAxes().put(AxisType.Y, yAxis);
     }
 
     public void load() {
@@ -87,29 +100,31 @@ public class MultiUserHistoryBean implements Serializable {
             fatSeries.setLabel(fatmanUser.getFirstName());
             fatSeries.setMarkerStyle("diamond");
 
-            List<PersonDataDbEntry> entries = new ArrayList<>(getPersonDataDbEntries());
+            List<PersonDataDbEntry> entries = new ArrayList<>(getPersonDataDbEntries(selectedUser));
 
-            final Calendar count = Calendar.getInstance();
-            count.setTime(fromDate);
+            final LocalDate startDate = LocalDate.from(Instant.ofEpochMilli(fromDate.getTime()).atZone(ZoneId.systemDefault()));
+            LocalDate endDate = LocalDate.from(Instant.ofEpochMilli(toDate.getTime()).atZone(ZoneId.systemDefault()));
+            int count = 0;
 
-            while (count.before(toDate)) {
-                PersonDataDbEntry entry = (PersonDataDbEntry) CollectionUtils.find(entries, new Predicate() {
-                    @Override
-                    public boolean evaluate(Object o) {
-                        PersonDataDbEntry entry = (PersonDataDbEntry) o;
-                        return entry.getDate().before(count.getTime());
+            while (startDate.plusDays(count).isBefore(endDate)) {
+
+                PersonDataDbEntry dailyEntry = null;
+                for (PersonDataDbEntry entry : entries) {
+                    LocalDate entryDate = entry.getDate().toLocalDate();
+
+                    if (ChronoUnit.DAYS.between(entryDate, startDate.plusDays(count)) < 1) {
+                        dailyEntry = entry;
+                        break;
                     }
-                });
-                LocalDate localDate = Instant.ofEpochMilli(new Date(count.getTime().getTime()).getTime()).atZone(ZoneId.systemDefault()).toLocalDate();
-                float fatPercentage = entry == null ? 0 : entry.getFatPercentage();
-                fatSeries.set(localDate.toString(), fatPercentage);
-                count.add(Calendar.DAY_OF_MONTH, 1);
+                }
+
+                float fatPercentage = dailyEntry == null ? 0 : dailyEntry.getFatPercentage();
+                fatSeries.set(startDate.plusDays(count).toString(), fatPercentage);
+                count++;
             }
 
             linearModel.addSeries(fatSeries);
         }
-
-        linearModel.getAxes().put(AxisType.Y, new LinearAxis());
 
         DateAxis xAxis = new DateAxis("Datum");
         xAxis.setTickCount(daysBetween(fromDate, toDate));
@@ -148,8 +163,8 @@ public class MultiUserHistoryBean implements Serializable {
     }
 
 
-    private List<PersonDataDbEntry> getPersonDataDbEntries() {
-        return personDataDbEntryRepository.findAllEntries(userId, fromDate, toDate);
+    private List<PersonDataDbEntry> getPersonDataDbEntries(String selectedUser) {
+        return personDataDbEntryRepository.findAllEntries(selectedUser, fromDate, toDate);
     }
 
     private void showInfoMessage(String message) {

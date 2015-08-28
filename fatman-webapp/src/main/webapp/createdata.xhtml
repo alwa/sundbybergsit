@@ -82,18 +82,15 @@
                     />
         </h:form>
 
-        <p/>
         <p:chart
                 id="meterGaugeChart"
                 type="meterGaugeChart"
                 model="#{fatmanDataHandlerBean.meterGaugeModel}"
                 rendered="#{fatmanDataHandlerBean.meterGaugeModel != null}"
-                showTickLabels="false"
-                labelHeightAdjust="110" intervalOuterRadius="130"
-                seriesColors="93b75f, 66cc66, E7E658, cc6666" style="width:400px;height:250px"
-                title="#{fatmanDataHandlerBean.fatLevelComment}" label="#{msg['titles.bmi']}"/>
+                style="width:400px;height:250px"
+                />
 
         <p/>
-        <h:link value="#{msg['link.back.startpage']}" outcome="start"/>
+       <p:link value="#{msg['link.back.startpage']}" outcome="start"/>
     </ui:define>
 </ui:composition>

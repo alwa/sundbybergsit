@@ -57,7 +57,7 @@ public class SingleUserHistoryBean implements Serializable {
 
     private List<SelectItem> users;
 
-    private LineChartModel linearModel = new LineChartModel();
+    private LineChartModel linearModel;
 
     private String userId;
 
@@ -72,12 +72,27 @@ public class SingleUserHistoryBean implements Serializable {
         Validate.notNull(user, "user must be set!");
 
         displayName = user.getFirstName() + " " + user.getLastName();
+        linearModel = new LineChartModel();
+        linearModel.setTitle(displayName);
+        linearModel.setSeriesColors("FF0000,FFFF00,0000FF");
+        linearModel.setExtender("customExtender");
+        linearModel.setAnimate(true);
+        linearModel.setShadow(true);
+        linearModel.setZoom(true);
+        linearModel.setShowDatatip(true);
+        linearModel.setLegendPosition("e");
+
+        LinearAxis yAxis = new LinearAxis();
+        yAxis.setMin(0);
+        yAxis.setMax(100);
+        linearModel.getAxes().put(AxisType.Y, yAxis);
     }
 
     public void load() {
         LOGGER.info("load()");
 
         linearModel.clear();
+
         LineChartSeries waterSeries = new LineChartSeries();
         waterSeries.setLabel("Vatten");
         LineChartSeries fatSeries = new LineChartSeries();
@@ -108,11 +123,9 @@ public class SingleUserHistoryBean implements Serializable {
         linearModel.addSeries(fatSeries);
         linearModel.addSeries(waterSeries);
 
-        linearModel.getAxes().put(AxisType.Y, new LinearAxis());
-
         DateAxis xAxis = new DateAxis("Datum");
 
-        xAxis.setTickCount(daysBetween(fromDate, toDate));
+//        xAxis.setTickCount(daysBetween(fromDate, toDate));
         xAxis.setTickAngle(-50);
 
         xAxis.setMin(Instant.ofEpochMilli(fromDate.getTime()).atZone(ZoneId.systemDefault()).toLocalDate().toString());

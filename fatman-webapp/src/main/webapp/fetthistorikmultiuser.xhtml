@@ -72,11 +72,8 @@
                     type="line"
                     model="#{multiUserHistoryBean.linearModel}"
                     rendered="#{multiUserHistoryBean.linearModel != null}"
-                    animate="true"
-                    shadow="true"
-                    extender="customExtender" legendPosition="e"
-                    zoom="true"
-                    title="#{msg['titles.fathistorymultiuser']}" minY="10" maxY="50" style="height:300px"/>
+                    responsive="true"
+                    style="height:300px"/>
 
             <p/>
         </h:form>

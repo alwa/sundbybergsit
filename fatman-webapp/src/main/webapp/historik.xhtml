@@ -31,6 +31,7 @@
         <script type="text/javascript">
             function customExtender() {
                 this.cfg.highlighter = {
+                    show: true,
                     useAxesFormatters: false,
                     tooltipAxes: 'y'
                 }
@@ -65,15 +66,11 @@
             <p:panel>
                 <p:chart
                         id="linear"
-                         type="line"
-                         model="#{singleUserHistoryBean.linearModel}"
-                         rendered="#{singleUserHistoryBean.linearModel != null}"
-                         animate="true"
-                         shadow="true"
-                         seriesColors="FF0000,FFFF00,0000FF"
-                         extender="customExtender" legendPosition="e"
-                         zoom="true"
-                         title='#{singleUserHistoryBean.displayName}' minY="10" maxY="100" style="height:300px"/>
+                        type="line"
+                        model="#{singleUserHistoryBean.linearModel}"
+                        rendered="#{singleUserHistoryBean.linearModel != null}"
+                        responsive="true"
+                        style="height:300px"/>
             </p:panel>
         </h:form>
 

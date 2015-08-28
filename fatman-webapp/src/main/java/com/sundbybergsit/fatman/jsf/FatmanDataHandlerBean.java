@@ -4,11 +4,7 @@ import com.sundbybergsit.calculation.Calculator;
 import com.sundbybergsit.entities.FatmanDbUser;
 import com.sundbybergsit.entities.PersonDataDbEntry;
 import com.sundbybergsit.services.*;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.Predicate;
 import org.apache.commons.lang.Validate;
-import org.primefaces.model.chart.CartesianChartModel;
-import org.primefaces.model.chart.LineChartSeries;
 import org.primefaces.model.chart.MeterGaugeChartModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,19 +13,13 @@ import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.RequestScoped;
-import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
-import javax.inject.Named;
 import javax.transaction.SystemException;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @ManagedBean(name = "fatmanDataHandlerBean")
 public class FatmanDataHandlerBean implements Serializable {
@@ -75,8 +65,6 @@ public class FatmanDataHandlerBean implements Serializable {
     public void init() {
         try {
             Validate.notNull(loginBean, "loginBean must be set!");
-            Validate.notNull(weightInKilograms, "Weight must be set!");
-            Validate.notNull(fatPercentage, "Fat percentage must be set!");
 
             userId = loginBean.getUserId();
             Validate.notNull(userId, "userId must be set!");
@@ -93,6 +81,9 @@ public class FatmanDataHandlerBean implements Serializable {
 
     public void create() throws SystemException {
         try {
+            Validate.notNull(weightInKilograms, "Weight must be set!");
+            Validate.notNull(fatPercentage, "Fat percentage must be set!");
+
             FatmanDbUser user = userRepository.findUserByUserName(userId);
             Validate.notNull(user, "user must be set!");
 
@@ -100,7 +91,7 @@ public class FatmanDataHandlerBean implements Serializable {
                     waterPercentage == null ? 0f : waterPercentage, new java.sql.Date(date.getTime()), activityLevel);
             personDataDbEntryRepository.save(data);
             LOGGER.info("Persisting new data entry: {}", data);
-            createMeterGaugeModel();
+            createMeterGaugeModel(user);
             showInfoMessage("Hohoo, värdet sparades ned i databasen!");
         } catch (Exception e) {
             LOGGER.error(String.format("Error: %s", e.getMessage()), e);
@@ -124,7 +115,7 @@ public class FatmanDataHandlerBean implements Serializable {
 
     private void showErrorMessage(Exception e) {
         FacesContext facesContext = getFacesContext();
-        facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Ooof, någonting gick fel", e.getMessage()));
+        facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, String.format("Ooof, någonting gick fel (%s)", e.getMessage()), e.getMessage()));
     }
 
     public String getDisplayName() {
@@ -171,14 +162,13 @@ public class FatmanDataHandlerBean implements Serializable {
         this.date = date;
     }
 
-    public void createMeterGaugeModel() {
+    private void createMeterGaugeModel(FatmanDbUser user) {
         List<Number> intervals = new ArrayList<Number>() {{
             add(18.5);
             add(24.9);
             add(29.9);
             add(50);
         }};
-        FatmanDbUser user = userRepository.findUserByUserName(userId);
 
         Calculator<FatmanDbUser> bmiCalculator = new Calculator<FatmanDbUser>() {
             @Override
@@ -186,24 +176,15 @@ public class FatmanDataHandlerBean implements Serializable {
                 return (float) weight / (((double) user.getHeightInCentimetres() / 100) * ((double) user.getHeightInCentimetres() / 100));
             }
         };
-//        Calculator<FatmanDbUser> bmiCalculator =
-//                (FatmanDbUser u, Number w) -> {
-//                    double heightInMetres = (double) u.getHeightInCentimetres() / 100;
-//                    return (float) w /
-//                            (heightInMetres * heightInMetres);
-//                };
+
         Number bmi = bmiCalculator.calculate(user, weightInKilograms);
         meterGaugeModel = new MeterGaugeChartModel(bmi, intervals);
-        meterGaugeModel.setTitle("BMI");
-    }
-
-    /* BMI = Kroppsvikt /( Längden * Längden) = kg/m*m */
-    Number calculateBmi() {
-
-        FatmanDbUser user = userRepository.findUserByUserName(userId);
-        double heightInMeters = (double) user.getHeightInCentimetres() / 100;
-        return weightInKilograms /
-                (heightInMeters * heightInMeters);
+        meterGaugeModel.setShowTickLabels(false);
+        meterGaugeModel.setIntervalOuterRadius(130);
+        meterGaugeModel.setLabelHeightAdjust(110);
+        meterGaugeModel.setSeriesColors("93b75f, 66cc66, E7E658, cc6666");
+        meterGaugeModel.setGaugeLabel(getString("titles.bmi"));
+        meterGaugeModel.setTitle(getFatLevelComment(bmi));
     }
 
     public MeterGaugeChartModel getMeterGaugeModel() {
@@ -227,21 +208,8 @@ public class FatmanDataHandlerBean implements Serializable {
         this.loginBean = loginBean;
     }
 
-    public String getFatLevelComment() {
-        FatmanDbUser user = userRepository.findUserByUserName(userId);
-        Calculator<FatmanDbUser> bmiCalculator = new Calculator<FatmanDbUser>() {
-            @Override
-            public Number calculate(FatmanDbUser user, Number weight) {
-                return (float) weight / (((double) user.getHeightInCentimetres() / 100) * ((double) user.getHeightInCentimetres() / 100));
-            }
-        };
-//        Calculator<FatmanDbUser> bmiCalculator =
-//                (FatmanDbUser u, Number w) -> {
-//                    double heightInMetres = (double) u.getHeightInCentimetres() / 100;
-//                    return (float) w /
-//                            (heightInMetres * heightInMetres);
-//                };
-        Number bmi = bmiCalculator.calculate(user, weightInKilograms);
+    public String getFatLevelComment(Number bmi) {
+
         if (bmi.intValue() < 19) {
             return "Klen liten pojke";
         } else if (bmi.intValue() < 25) {
@@ -277,5 +245,13 @@ public class FatmanDataHandlerBean implements Serializable {
 
     public void setUserSettingsRepository(UserSettingsRepository userSettingsRepository) {
         this.userSettingsRepository = userSettingsRepository;
+    }
+
+    private String getString(String localisationKey) {
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        String messageBundleName = facesContext.getApplication().getMessageBundle();
+        Locale locale = facesContext.getViewRoot().getLocale();
+        ResourceBundle bundle = ResourceBundle.getBundle(messageBundleName, locale);
+        return bundle.getString(localisationKey);
     }
 }
