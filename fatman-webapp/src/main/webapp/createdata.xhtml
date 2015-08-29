@@ -85,12 +85,14 @@
         <p:chart
                 id="meterGaugeChart"
                 type="meterGaugeChart"
+                responsive="true"
                 model="#{fatmanDataHandlerBean.meterGaugeModel}"
                 rendered="#{fatmanDataHandlerBean.meterGaugeModel != null}"
                 style="width:400px;height:250px"
                 />
 
         <p/>
+
        <p:link value="#{msg['link.back.startpage']}" outcome="start"/>
     </ui:define>
 </ui:composition>

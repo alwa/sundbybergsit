@@ -113,7 +113,7 @@ public class FatmanDataHandlerBean implements Serializable {
         return FacesContext.getCurrentInstance();
     }
 
-    private void showErrorMessage(Exception e) {
+    void showErrorMessage(Exception e) {
         FacesContext facesContext = getFacesContext();
         facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, String.format("Ooof, någonting gick fel (%s)", e.getMessage()), e.getMessage()));
     }
@@ -183,7 +183,6 @@ public class FatmanDataHandlerBean implements Serializable {
         meterGaugeModel.setIntervalOuterRadius(130);
         meterGaugeModel.setLabelHeightAdjust(110);
         meterGaugeModel.setSeriesColors("93b75f, 66cc66, E7E658, cc6666");
-        meterGaugeModel.setGaugeLabel(getString("titles.bmi"));
         meterGaugeModel.setTitle(getFatLevelComment(bmi));
     }
 
@@ -245,13 +244,5 @@ public class FatmanDataHandlerBean implements Serializable {
 
     public void setUserSettingsRepository(UserSettingsRepository userSettingsRepository) {
         this.userSettingsRepository = userSettingsRepository;
-    }
-
-    private String getString(String localisationKey) {
-        FacesContext facesContext = FacesContext.getCurrentInstance();
-        String messageBundleName = facesContext.getApplication().getMessageBundle();
-        Locale locale = facesContext.getViewRoot().getLocale();
-        ResourceBundle bundle = ResourceBundle.getBundle(messageBundleName, locale);
-        return bundle.getString(localisationKey);
     }
 }

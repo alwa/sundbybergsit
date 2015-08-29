@@ -66,6 +66,7 @@ public class FatmanDataHandlerBeanTest {
         handler.create();
 
         verify(personDataDbEntryRepository).save(isA(PersonDataDbEntry.class));
+        verify(handler, times(0)).showErrorMessage(any(Exception.class));
     }
 
     @Test
@@ -75,5 +76,6 @@ public class FatmanDataHandlerBeanTest {
         handler.create();
 
         verifyZeroInteractions(personDataDbEntryRepository);
+        verify(handler, times(1)).showErrorMessage(any(Exception.class));
     }
 }
