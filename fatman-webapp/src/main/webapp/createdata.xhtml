@@ -73,26 +73,30 @@
                     <p:message for="activityInput" display=""/>
                 </h:panelGroup>
             </h:panelGrid>
+
             <p:commandButton
                     id="createDataButton"
                     value="#{msg['button.create']}"
-                    actionListener="#{fatmanDataHandlerBean.create}"
                     ajax="false"
                     update="meterGaugeChart"
+                    actionListener="#{fatmanDataHandlerBean.create}"
                     />
+
+            <p/>
+            <p:panel>
+                <p:chart
+                        id="meterGaugeChart"
+                        type="metergauge"
+                        responsive="true"
+                        model="#{fatmanDataHandlerBean.meterGaugeModel}"
+                        rendered="#{fatmanDataHandlerBean.meterGaugeModel != null}"
+                        style="width:400px;height:250px"
+                        />
+            </p:panel>
         </h:form>
 
-        <p:chart
-                id="meterGaugeChart"
-                type="meterGaugeChart"
-                responsive="true"
-                model="#{fatmanDataHandlerBean.meterGaugeModel}"
-                rendered="#{fatmanDataHandlerBean.meterGaugeModel != null}"
-                style="width:400px;height:250px"
-                />
-
         <p/>
+        <h:link value="#{msg['link.back.startpage']}" outcome="start"/>
 
-       <p:link value="#{msg['link.back.startpage']}" outcome="start"/>
     </ui:define>
 </ui:composition>

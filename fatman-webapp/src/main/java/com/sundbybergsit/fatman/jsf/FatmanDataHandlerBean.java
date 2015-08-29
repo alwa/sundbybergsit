@@ -13,6 +13,7 @@ import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
+import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.transaction.SystemException;
@@ -167,7 +168,7 @@ public class FatmanDataHandlerBean implements Serializable {
             add(18.5);
             add(24.9);
             add(29.9);
-            add(50);
+            add(39.9);
         }};
 
         Calculator<FatmanDbUser> bmiCalculator = new Calculator<FatmanDbUser>() {
@@ -184,10 +185,15 @@ public class FatmanDataHandlerBean implements Serializable {
         meterGaugeModel.setLabelHeightAdjust(110);
         meterGaugeModel.setSeriesColors("93b75f, 66cc66, E7E658, cc6666");
         meterGaugeModel.setTitle(getFatLevelComment(bmi));
+        meterGaugeModel.setGaugeLabel("BMI");
     }
 
     public MeterGaugeChartModel getMeterGaugeModel() {
         return meterGaugeModel;
+    }
+
+    public void setMeterGaugeModel(MeterGaugeChartModel meterGaugeModel) {
+        this.meterGaugeModel = meterGaugeModel;
     }
 
     public void setPersonDataDbEntryRepository(PersonDataDbEntryRepository personDataDbEntryRepository) {
@@ -245,4 +251,5 @@ public class FatmanDataHandlerBean implements Serializable {
     public void setUserSettingsRepository(UserSettingsRepository userSettingsRepository) {
         this.userSettingsRepository = userSettingsRepository;
     }
+
 }

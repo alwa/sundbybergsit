@@ -10,11 +10,15 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.primefaces.model.chart.MeterGaugeChartModel;
 
 import javax.faces.context.FacesContext;
 import javax.transaction.SystemException;
 import java.sql.Date;
 
+import static org.hamcrest.core.Is.is;
+import static org.hamcrest.core.IsNull.notNullValue;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
 
@@ -43,6 +47,7 @@ public class FatmanDataHandlerBeanTest {
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
+
         handler = spy(new FatmanDataHandlerBean());
         handler.setUserStatisticsService(userStatisticsService);
         handler.setPersonDataDbEntryRepository(personDataDbEntryRepository);
@@ -50,13 +55,28 @@ public class FatmanDataHandlerBeanTest {
         handler.setUserRepository(userRepository);
         handler.setUserSettingsRepository(userSettingsRepository);
         handler.setLoginBean(loginBean);
-        when(userRepository.findUserByUserName("some user")).thenReturn(new FatmanDbUser("some user", 120, new Date(0), "a", "a"));
+
+        when(userRepository.findUserByUserName("some user")).thenReturn(new FatmanDbUser("some user", 180, new Date(0), "a", "a"));
         when(userSettingsRepository.findSettingsForUser(anyString())).thenReturn(dummySettings);
         when(loginBean.getUserId()).thenReturn("some user");
 
         handler.setUserId("some user");
         doReturn(mock(FacesContext.class)).when(handler).getFacesContext();
     }
+
+    @Test
+    public void createWithRequiredFieldsInitializesMeterGaugeModelRight() throws SystemException {
+        handler.setFatPercentage(50.0f);
+        handler.setWeightInKilograms(80.0f);
+
+        handler.create();
+
+        MeterGaugeChartModel meterGaugeModel = handler.getMeterGaugeModel();
+        assertThat(meterGaugeModel, notNullValue());
+        assertThat(meterGaugeModel.getValue().intValue(), is(24));
+        assertThat(meterGaugeModel.getGaugeLabel(), is("BMI"));
+    }
+
 
     @Test
     public void createWithRequiredFieldsPersists() throws SystemException {
@@ -78,4 +98,5 @@ public class FatmanDataHandlerBeanTest {
         verifyZeroInteractions(personDataDbEntryRepository);
         verify(handler, times(1)).showErrorMessage(any(Exception.class));
     }
+
 }
