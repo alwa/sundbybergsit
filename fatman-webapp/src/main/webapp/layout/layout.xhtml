@@ -61,11 +61,15 @@
             <p class="alignleft"><strong>FATMAN</strong></p>
 
             <p class="alignright">
-                &#169; <strong>Sundbybergs IT</strong> 2013 |&#160;
+                &#169; <strong>Sundbybergs IT</strong> 2015 |&#160;
                 <h:outputText value="#{versionBean.version} build #{versionBean.build}"
-                              rendered="#{versionBean.version != null}"/>
+                              rendered="#{versionBean.version != null && versionBean.build != null}"/>
 
                 <h:outputText value="#{msg['version.unspecified']}" rendered="#{versionBean.version == null}"/>
+
+                <h:outputText value="#{versionBean.version}"
+                              rendered="#{versionBean.version != null && versionBean.build == null}"/>
+
             </p>
         </div>
     </div>
