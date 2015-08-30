@@ -1,0 +1,14 @@
+<document xmlns="http://maven.apache.org/changes/1.0.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/xsd/changes-1.0.0.xsd">
+  <body>
+    <release version="3.0" date="2015" description="JSF 2.1-baserad med PrimeFaces 5.2. Container: TomEE 1.7.x">
+    </release>
+
+    <release version="2.0" date="2013" description="JSF 1.2-baserad med PrimeFaces 4.0. Container: TomEE 1.5.x">
+    </release>
+
+    <release version="1.0" date="2007" description="Swing-baserad version som laddades via webstart">
+    </release>
+  </body>
+</document>

@@ -116,17 +116,17 @@
             <dependency>
                 <groupId>com.sundbybergsit</groupId>
                 <artifactId>fatman-webapp</artifactId>
-                <version>1.0.0-SNAPSHOT</version>
+                <version>3.0.0</version>
             </dependency>
             <dependency>
                 <groupId>com.sundbybergsit</groupId>
                 <artifactId>fatman-domain</artifactId>
-                <version>1.0.0-SNAPSHOT</version>
+                <version>3.0.0</version>
             </dependency>
             <dependency>
                 <groupId>com.sundbybergsit</groupId>
                 <artifactId>fatman-applet</artifactId>
-                <version>1.0.0-SNAPSHOT</version>
+                <version>3.0.0</version>
             </dependency>
             <dependency>
                 <groupId>com.sundbybergsit</groupId>
@@ -282,10 +282,10 @@
     </dependencies>
 
     <scm>
-        <connection>scm:svn:http://127.0.0.1/dummy</connection>
-        <developerConnection>scm:svn:https://127.0.0.1/dummy</developerConnection>
+        <connection>scm:git:https://github.com/alwa/sundbybergsit</connection>
+        <developerConnection>scm:git:https://github.com/alwa/sundbybergsit</developerConnection>
         <tag>HEAD</tag>
-        <url>http://127.0.0.1/dummy</url>
+        <url>http://github.com/alwa/sundbybergsit</url>
     </scm>
 
     <build>
@@ -295,7 +295,7 @@
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>buildnumber-maven-plugin</artifactId>
-                    <version>1.2</version>
+                    <version>1.3</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -307,7 +307,6 @@
                     <artifactId>maven-compiler-plugin</artifactId>
                     <version>3.0</version>
                 </plugin>
-
                 <plugin>
                     <groupId>org.apache.openejb.maven</groupId>
                     <artifactId>tomee-maven-plugin</artifactId>
