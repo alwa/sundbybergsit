@@ -5,7 +5,7 @@ Just nu så existerar bara en webapplikation: [Fatman](http://www.sundbybergsit.
 
 ## Beroenden
 - [TomEE Plus 1.7.2](http://openejb.apache.org/apache-tomee.html)
-- [Maven 3.2+](https://maven.apache.org/)
+- [Maven 3.3+](https://maven.apache.org/)
 - [JDK 8](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
 - MS SQL 2012+
 - MSSQL JDBC driver (4.0)
