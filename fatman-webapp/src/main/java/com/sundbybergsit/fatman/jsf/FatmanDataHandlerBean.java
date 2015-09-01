@@ -171,12 +171,7 @@ public class FatmanDataHandlerBean implements Serializable {
             add(39.9);
         }};
 
-        Calculator<FatmanDbUser> bmiCalculator = new Calculator<FatmanDbUser>() {
-            @Override
-            public Number calculate(FatmanDbUser user, Number weight) {
-                return (float) weight / (((double) user.getHeightInCentimetres() / 100) * ((double) user.getHeightInCentimetres() / 100));
-            }
-        };
+        Calculator<FatmanDbUser> bmiCalculator = (user1, weight) -> (float) weight / (((double) user1.getHeightInCentimetres() / 100) * ((double) user1.getHeightInCentimetres() / 100));
 
         Number bmi = bmiCalculator.calculate(user, weightInKilograms);
         meterGaugeModel = new MeterGaugeChartModel(bmi, intervals);
