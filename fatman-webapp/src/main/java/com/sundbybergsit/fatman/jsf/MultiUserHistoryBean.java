@@ -133,6 +133,7 @@ public class MultiUserHistoryBean implements Serializable {
         xAxis.setMin(Instant.ofEpochMilli(fromDate.getTime()).atZone(ZoneId.systemDefault()).toLocalDate().toString());
         xAxis.setMax(Instant.ofEpochMilli(toDate.getTime()).atZone(ZoneId.systemDefault()).toLocalDate().toString());
         xAxis.setTickFormat("%F");
+        xAxis.setTickInterval("1 day");
         linearModel.getAxes().put(AxisType.X, xAxis);
     }
 

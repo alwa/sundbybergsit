@@ -21,6 +21,7 @@ import java.io.Serializable;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -89,17 +90,35 @@ public class SingleUserHistoryBean implements Serializable {
 
         List<PersonDataDbEntry> entries = getPersonDataDbEntries();
 
-        for (PersonDataDbEntry entry : entries) {
-            LocalDate entryDate = Instant.ofEpochMilli(entry.getDate().getTime()).atZone(ZoneId.systemDefault()).toLocalDate();
+        final LocalDate startDate = LocalDate.from(Instant.ofEpochMilli(fromDate.getTime()).atZone(ZoneId.systemDefault()));
+        LocalDate endDate = LocalDate.from(Instant.ofEpochMilli(toDate.getTime()).atZone(ZoneId.systemDefault()));
+        int count = 0;
 
-            weakShameSeries.set(entryDate.toString(), 1);
-            muchShameSeries.set(entryDate.toString(), 4);
-            phantomShameSeries.set(entryDate.toString(), 2);
-            lessShameSeries.set(entryDate.toString(), 3);
-            weightSeries.set(entryDate.toString(), entry.getWeight());
-            fatSeries.set(entryDate.toString(), entry.getFatPercentage());
-            waterSeries.set(entryDate.toString(), entry.getWaterPercentage());
+        while (startDate.plusDays(count).isBefore(endDate.plusDays(1))) {
+            PersonDataDbEntry dailyEntry = null;
+            for (PersonDataDbEntry entry : entries) {
+                LocalDate entryDate = entry.getDate().toLocalDate();
+
+                if (ChronoUnit.DAYS.between(entryDate, startDate.plusDays(count)) < 1) {
+                    dailyEntry = entry;
+                    break;
+                }
+            }
+            String thisDay = startDate.plusDays(count).toString();
+
+            if (dailyEntry != null) {
+                fatSeries.set(thisDay,  dailyEntry.getFatPercentage());
+                weightSeries.set(thisDay,  dailyEntry.getWeight());
+                waterSeries.set(thisDay,  dailyEntry.getWaterPercentage());
+            }
+
+            weakShameSeries.set(thisDay, 1);
+            muchShameSeries.set(thisDay, 4);
+            phantomShameSeries.set(thisDay, 2);
+            lessShameSeries.set(thisDay, 3);
+            count++;
         }
+
         addSeries(muchShameSeries, lessShameSeries, phantomShameSeries, weakShameSeries, weightSeries, fatSeries, waterSeries);
 
         linearModel.getAxes().put(AxisType.Y, getShameAxis());
