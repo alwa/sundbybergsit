@@ -1,5 +1,6 @@
 package com.sundbybergsit.fatman.jsf;
 
+import com.sundbybergsit.calculation.Calculator;
 import com.sundbybergsit.entities.FatmanDbUser;
 import com.sundbybergsit.entities.PersonDataDbEntry;
 import com.sundbybergsit.entities.UserDbSettings;
@@ -92,14 +93,14 @@ public class SingleUserHistoryBean implements Serializable {
             LocalDate entryDate = Instant.ofEpochMilli(entry.getDate().getTime()).atZone(ZoneId.systemDefault()).toLocalDate();
 
             weakShameSeries.set(entryDate.toString(), 1);
+            muchShameSeries.set(entryDate.toString(), 4);
             phantomShameSeries.set(entryDate.toString(), 2);
             lessShameSeries.set(entryDate.toString(), 3);
-            muchShameSeries.set(entryDate.toString(), 4);
             weightSeries.set(entryDate.toString(), entry.getWeight());
             fatSeries.set(entryDate.toString(), entry.getFatPercentage());
             waterSeries.set(entryDate.toString(), entry.getWaterPercentage());
         }
-        addSeries(weakShameSeries, phantomShameSeries, lessShameSeries, muchShameSeries, weightSeries, fatSeries, waterSeries);
+        addSeries(muchShameSeries, lessShameSeries, phantomShameSeries, weakShameSeries, weightSeries, fatSeries, waterSeries);
 
         linearModel.getAxes().put(AxisType.Y, getShameAxis());
         linearModel.getAxes().put(AxisType.X, getXaxis());
@@ -147,6 +148,9 @@ public class SingleUserHistoryBean implements Serializable {
         this.userId = userId;
         FatmanDbUser user = userRepository.findUserByUserName(userId);
         displayName = user.getFirstName() + " " + user.getLastName();
+        if (linearModel != null) {
+            linearModel.setTitle(displayName);
+        }
     }
 
     public String createFatmanComment() {
@@ -189,7 +193,6 @@ public class SingleUserHistoryBean implements Serializable {
         shameSeries.setLabel(label);
         shameSeries.setYaxis(axisType);
         shameSeries.setShowMarker(false);
-        shameSeries.setFillAlpha(0.5);
         return shameSeries;
     }
 
@@ -235,8 +238,14 @@ public class SingleUserHistoryBean implements Serializable {
 
     private LinearAxis getWeightAxis() {
         LinearAxis yAxis = new LinearAxis();
-        yAxis.setMin(45);
-        yAxis.setMax(120); // FIXME: Basera på BMI
+        FatmanDbUser user = userRepository.findUserByUserName(userId);
+        Calculator<FatmanDbUser> weightFromBmiCalculator = (user1, bmi) ->
+                bmi.intValue() * (((double) user1.getHeightInCentimetres() / 100) * ((double) user1.getHeightInCentimetres() / 100));
+        Number minWeight = weightFromBmiCalculator.calculate(user, 15);
+        Number maxWeight = weightFromBmiCalculator.calculate(user, 40);
+
+        yAxis.setMin(minWeight);
+        yAxis.setMax(maxWeight);
         return yAxis;
     }
 
@@ -262,7 +271,7 @@ public class SingleUserHistoryBean implements Serializable {
         String white = "FFFFFF";
         String pink = "ffe4e1";
         String maroon = "b03060";
-        return lightBlue + ", " + white + ", " + pink + ", " + maroon + ", " + red + "," + yellow + "," + blue;
+        return maroon + ", " + pink + ", " + white + ", " + lightBlue + ", " + red + "," + yellow + "," + blue;
     }
 
 
