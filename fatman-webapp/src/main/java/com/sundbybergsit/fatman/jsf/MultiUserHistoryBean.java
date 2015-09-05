@@ -106,7 +106,7 @@ public class MultiUserHistoryBean implements Serializable {
             LocalDate endDate = LocalDate.from(Instant.ofEpochMilli(toDate.getTime()).atZone(ZoneId.systemDefault()));
             int count = 0;
 
-            while (startDate.plusDays(count).isBefore(endDate)) {
+            while (startDate.plusDays(count).isBefore(endDate.plusDays(1))) {
 
                 PersonDataDbEntry dailyEntry = null;
                 for (PersonDataDbEntry entry : entries) {
