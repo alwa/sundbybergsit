@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 @ManagedBean(name = "singleUserHistoryBean")
 public class SingleUserHistoryBean implements Serializable {
@@ -52,7 +51,6 @@ public class SingleUserHistoryBean implements Serializable {
     private String displayName;
 
     private Date fromDate = lastWeek();
-
     private Date toDate = new Date();
 
     private List<SelectItem> users;
@@ -72,20 +70,7 @@ public class SingleUserHistoryBean implements Serializable {
         Validate.notNull(user, "user must be set!");
 
         displayName = user.getFirstName() + " " + user.getLastName();
-        linearModel = new LineChartModel();
-        linearModel.setTitle(displayName);
-        linearModel.setSeriesColors("FF0000,FFFF00,0000FF");
-        linearModel.setExtender("customExtender");
-        linearModel.setAnimate(true);
-        linearModel.setShadow(true);
-        linearModel.setZoom(true);
-        linearModel.setShowDatatip(true);
-        linearModel.setLegendPosition("e");
-
-        LinearAxis yAxis = new LinearAxis();
-        yAxis.setMin(0);
-        yAxis.setMax(100);
-        linearModel.getAxes().put(AxisType.Y, yAxis);
+        linearModel = getNewFatmanLineChartModel();
     }
 
     public void load() {
@@ -93,45 +78,31 @@ public class SingleUserHistoryBean implements Serializable {
 
         linearModel.clear();
 
-        LineChartSeries waterSeries = new LineChartSeries();
-        waterSeries.setLabel("Vatten");
-        LineChartSeries fatSeries = new LineChartSeries();
-        fatSeries.setLabel("Fett");
-        fatSeries.setMarkerStyle("diamond");
-
-        LineChartSeries weightSeries = new LineChartSeries();
-        weightSeries.setLabel("Vikt");
+        LineChartSeries weakShameSeries = getShameLevelSeries(AxisType.Y, "Klen pojke");
+        LineChartSeries phantomShameSeries = getShameLevelSeries(AxisType.Y, "Fantom");
+        LineChartSeries lessShameSeries = getShameLevelSeries(AxisType.Y, "Mindre skamligt");
+        LineChartSeries muchShameSeries = getShameLevelSeries(AxisType.Y, "Mycket skamligt");
+        LineChartSeries weightSeries = getWeightSeries(AxisType.Y2);
+        LineChartSeries fatSeries = getFatSeries(AxisType.Y3);
+        LineChartSeries waterSeries = getWaterSeries(AxisType.Y4);
 
         List<PersonDataDbEntry> entries = getPersonDataDbEntries();
 
-//        LocalDate date = Instant.ofEpochMilli(fromDate.getTime()).atZone(ZoneId.systemDefault()).toLocalDate();
         for (PersonDataDbEntry entry : entries) {
             LocalDate entryDate = Instant.ofEpochMilli(entry.getDate().getTime()).atZone(ZoneId.systemDefault()).toLocalDate();
-//
-//            while (date.isBefore(entryDate)) {
-//                weightSeries.set(date.toString(), 0);
-//                fatSeries.set(date.toString(), 0);
-//                waterSeries.set(date.toString(), 0);
-//                date = date.plusDays(1);
-//            }
 
+            weakShameSeries.set(entryDate.toString(), 1);
+            phantomShameSeries.set(entryDate.toString(), 2);
+            lessShameSeries.set(entryDate.toString(), 3);
+            muchShameSeries.set(entryDate.toString(), 4);
             weightSeries.set(entryDate.toString(), entry.getWeight());
             fatSeries.set(entryDate.toString(), entry.getFatPercentage());
             waterSeries.set(entryDate.toString(), entry.getWaterPercentage());
         }
-        linearModel.addSeries(weightSeries);
-        linearModel.addSeries(fatSeries);
-        linearModel.addSeries(waterSeries);
+        addSeries(weakShameSeries, phantomShameSeries, lessShameSeries, muchShameSeries, weightSeries, fatSeries, waterSeries);
 
-        DateAxis xAxis = new DateAxis("Datum");
-
-//        xAxis.setTickCount(daysBetween(fromDate, toDate));
-        xAxis.setTickAngle(-50);
-
-        xAxis.setMin(Instant.ofEpochMilli(fromDate.getTime()).atZone(ZoneId.systemDefault()).toLocalDate().toString());
-        xAxis.setMax(Instant.ofEpochMilli(toDate.getTime()).atZone(ZoneId.systemDefault()).toLocalDate().toString());
-        xAxis.setTickFormat("%F");
-        linearModel.getAxes().put(AxisType.X, xAxis);
+        linearModel.getAxes().put(AxisType.Y, getShameAxis());
+        linearModel.getAxes().put(AxisType.X, getXaxis());
 
         if (!userSettingsRepository.findSettingsForUser(userId).getShowDataToEveryone()) {
             showWarnMessage("Obs: Dina värden syns inte för någon annan användare");
@@ -153,34 +124,6 @@ public class SingleUserHistoryBean implements Serializable {
             }
         }
         return users;
-    }
-
-    private static int daysBetween(Date fromDate, Date toDate) {
-        long diff = toDate.getTime() - fromDate.getTime();
-        return (int) TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
-    }
-
-    private List<PersonDataDbEntry> getPersonDataDbEntries() {
-        return personDataDbEntryRepository.findAllEntries(userId, fromDate, toDate);
-    }
-
-    private void showInfoMessage(String message) {
-        FacesContext facesContext = getFacesContext();
-        facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, message, message));
-    }
-
-    private void showWarnMessage(String message) {
-        FacesContext facesContext = getFacesContext();
-        facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, message, message));
-    }
-
-    FacesContext getFacesContext() {
-        return FacesContext.getCurrentInstance();
-    }
-
-    private void showErrorMessage(Exception e) {
-        FacesContext facesContext = getFacesContext();
-        facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Ooof, någonting gick fel", e.getMessage()));
     }
 
     public LineChartModel getLinearModel() {
@@ -216,6 +159,134 @@ public class SingleUserHistoryBean implements Serializable {
         } catch (NoFatmanDataForUserException e) {
             return "Det finns ingenting att säga ännu eftersom det inte finns tillräckligt med data";
         }
+    }
+
+    private LineChartModel getNewFatmanLineChartModel() {
+        LineChartModel model = new LineChartModel();
+        model.setTitle(displayName);
+        model.setSeriesColors(getSeriesColors());
+        model.setExtender("customExtender");
+        model.setAnimate(true);
+        model.setShadow(true);
+        model.setZoom(true);
+        model.setShowDatatip(true);
+        model.setLegendPosition("e");
+        model.getAxes().put(AxisType.Y, getShameAxis());
+        model.getAxes().put(AxisType.Y2, getWeightAxis());
+        model.getAxes().put(AxisType.Y3, getFatAxis());
+        model.getAxes().put(AxisType.Y4, getWaterAxis());
+        return model;
+    }
+
+    private void addSeries(LineChartSeries... allSeries) {
+        for (LineChartSeries series : allSeries) {
+            linearModel.addSeries(series);
+        }
+    }
+
+    private LineChartSeries getShameLevelSeries(AxisType axisType, String label) {
+        LineChartSeries shameSeries = new LineChartSeries();
+        shameSeries.setLabel(label);
+        shameSeries.setYaxis(axisType);
+        shameSeries.setShowMarker(false);
+        shameSeries.setFillAlpha(0.5);
+        return shameSeries;
+    }
+
+    private LineChartSeries getWeightSeries(AxisType axisType) {
+        LineChartSeries weightSeries = new LineChartSeries();
+        weightSeries.setLabel("Vikt");
+        weightSeries.setYaxis(axisType);
+        return weightSeries;
+    }
+
+    private LineChartSeries getFatSeries(AxisType axisType) {
+        LineChartSeries fatSeries = new LineChartSeries();
+        fatSeries.setLabel("Fett");
+        fatSeries.setMarkerStyle("diamond");
+        fatSeries.setYaxis(axisType);
+        return fatSeries;
+    }
+
+    private LineChartSeries getWaterSeries(AxisType axisType) {
+        LineChartSeries waterSeries = new LineChartSeries();
+        waterSeries.setLabel("Vatten");
+        waterSeries.setYaxis(axisType);
+        return waterSeries;
+    }
+
+    private DateAxis getXaxis() {
+        DateAxis axis = new DateAxis("Datum");
+        axis.setTickAngle(-50);
+
+        axis.setMin(Instant.ofEpochMilli(fromDate.getTime()).atZone(ZoneId.systemDefault()).toLocalDate().toString());
+        axis.setMax(Instant.ofEpochMilli(toDate.getTime()).atZone(ZoneId.systemDefault()).toLocalDate().toString());
+        axis.setTickFormat("%F");
+        axis.setTickInterval("1 day");
+        return axis;
+    }
+
+    private Axis getShameAxis() {
+        LinearAxis axis = new LinearAxis();
+        axis.setMin(0);
+        axis.setMax(5);
+        return axis;
+    }
+
+    private LinearAxis getWeightAxis() {
+        LinearAxis yAxis = new LinearAxis();
+        yAxis.setMin(45);
+        yAxis.setMax(120); // FIXME: Basera på BMI
+        return yAxis;
+    }
+
+    private LinearAxis getFatAxis() {
+        LinearAxis yAxis = new LinearAxis();
+        yAxis.setMin(0);
+        yAxis.setMax(35);
+        return yAxis;
+    }
+
+    private LinearAxis getWaterAxis() {
+        LinearAxis yAxis = new LinearAxis();
+        yAxis.setMin(30);
+        yAxis.setMax(70);
+        return yAxis;
+    }
+
+    private String getSeriesColors() {
+        String lightBlue = "add8e6";
+        String red = "FF0000";
+        String yellow = "FFFF00";
+        String blue = "0000FF";
+        String white = "FFFFFF";
+        String pink = "ffe4e1";
+        String maroon = "b03060";
+        return lightBlue + ", " + white + ", " + pink + ", " + maroon + ", " + red + "," + yellow + "," + blue;
+    }
+
+
+    private List<PersonDataDbEntry> getPersonDataDbEntries() {
+        return personDataDbEntryRepository.findAllEntries(userId, fromDate, toDate);
+    }
+
+    private void showInfoMessage(String message) {
+        FacesContext facesContext = getFacesContext();
+        facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, message, message));
+    }
+
+    private void showWarnMessage(String message) {
+        FacesContext facesContext = getFacesContext();
+        facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, message, message));
+    }
+
+    FacesContext getFacesContext() {
+        return FacesContext.getCurrentInstance();
+    }
+
+    private void showErrorMessage(Exception e) {
+        FacesContext facesContext = getFacesContext();
+        facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Ooof, någonting gick fel", e.getMessage()));
     }
 
     private int getFatDiff() throws NoFatmanDataForUserException {

@@ -34,7 +34,14 @@
                     show: true,
                     useAxesFormatters: false,
                     tooltipAxes: 'y'
-                }
+                };
+                this.cfg.grid = {
+                    background: '#8b8989'
+                };
+                this.cfg.axes.yaxis = {
+                    showTicks: false,
+                    showTickMarks: false
+                };
             }
         </script>
         <h:form id="calendarForm">
@@ -70,7 +77,7 @@
                         model="#{singleUserHistoryBean.linearModel}"
                         rendered="#{singleUserHistoryBean.linearModel != null}"
                         responsive="true"
-                        style="height:300px"/>
+                        style="height:600px"/>
             </p:panel>
         </h:form>
 
