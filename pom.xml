@@ -387,7 +387,7 @@
                                     <message>Please consider using the maven-invoker-plugin (http://maven.apache.org/plugins/maven-invoker-plugin/)!</message>
                                 </bannedPlugins>
                                 <requireMavenVersion>
-                                    <version>3.3</version>
+                                    <version>3.2.5</version>
                                 </requireMavenVersion>
                                 <requireJavaVersion>
                                     <version>1.8</version>
