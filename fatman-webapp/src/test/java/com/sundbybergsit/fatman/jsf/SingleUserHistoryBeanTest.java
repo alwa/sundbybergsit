@@ -73,16 +73,16 @@ public class SingleUserHistoryBeanTest {
     }
 
     @Test
-    public void initWithSomeData() throws Exception {
+    public void loadWithSomeData() throws Exception {
         when(personDataDbEntryRepository.findAllEntries(anyString(), any(Date.class), any(Date.class))).thenReturn(createFakeEntries(2));
         when(userRepository.findUserByUserName("bla")).thenReturn(new FatmanDbUser("bla", 120, new Date(0), "a", "a"));
         when(userRepository.findUserByUserName("bla2")).thenReturn(new FatmanDbUser("bla2", 120, new Date(0), "a", "a"));
 
-        bean.init();
+        bean.load();
 
-        verify(linearModel, times(3)).addSeries(lineChartSeriesCaptor.capture());
+        verify(linearModel, times(7)).addSeries(lineChartSeriesCaptor.capture());
         List<LineChartSeries> allSeries = lineChartSeriesCaptor.getAllValues();
-        assertThat(allSeries.size(), is(3));
+        assertThat(allSeries.size(), is(7));
         assertThat(allSeries.get(0).getData().size(), is(allSeries.get(1).getData().size()));
     }
 
