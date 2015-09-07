@@ -3,6 +3,9 @@
 ## Beskrivning
 Just nu så existerar bara en webapplikation: [Fatman](http://www.sundbybergsit.com)
 
+## Byggstatus
+[![Build Status](https://travis-ci.org/alwa/sundbybergsit.svg?branch=master)](https://travis-ci.org/alwa/sundbybergsit)
+
 ## Beroenden
 - [TomEE Plus 1.7.2](http://openejb.apache.org/apache-tomee.html)
 - [Maven 3.2.5+](https://maven.apache.org/)
