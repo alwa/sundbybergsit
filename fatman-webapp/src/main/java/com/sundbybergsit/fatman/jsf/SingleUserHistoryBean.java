@@ -79,6 +79,10 @@ public class SingleUserHistoryBean implements Serializable {
         LOGGER.info("load()");
 
         linearModel.clear();
+        linearModel.getAxes().put(AxisType.Y, getShameAxis());
+        linearModel.getAxes().put(AxisType.Y2, getWeightAxis());
+        linearModel.getAxes().put(AxisType.Y3, getFatAxis());
+        linearModel.getAxes().put(AxisType.Y4, getWaterAxis());
 
         LineChartSeries weakShameSeries = getShameLevelSeries(AxisType.Y, "Klen pojke");
         LineChartSeries phantomShameSeries = getShameLevelSeries(AxisType.Y, "Fantom");
@@ -194,10 +198,7 @@ public class SingleUserHistoryBean implements Serializable {
         model.setZoom(true);
         model.setShowDatatip(true);
         model.setLegendPosition("e");
-        model.getAxes().put(AxisType.Y, getShameAxis());
-        model.getAxes().put(AxisType.Y2, getWeightAxis());
-        model.getAxes().put(AxisType.Y3, getFatAxis());
-        model.getAxes().put(AxisType.Y4, getWaterAxis());
+
         return model;
     }
 
