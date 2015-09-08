@@ -88,9 +88,9 @@ public class SingleUserHistoryBean implements Serializable {
         LineChartSeries phantomShameSeries = getLineChartSeries(AxisType.Y);
         LineChartSeries lessShameSeries = getLineChartSeries(AxisType.Y);
         LineChartSeries muchShameSeries = getLineChartSeries(AxisType.Y);
-        LineChartSeries weightSeries = getLineChartSeries(AxisType.Y2);
-        LineChartSeries fatSeries = getLineChartSeries(AxisType.Y3);
-        LineChartSeries waterSeries = getLineChartSeries(AxisType.Y4);
+        LineChartSeries weightSeries = getLineChartSeries(AxisType.Y2, "Vikt");
+        LineChartSeries fatSeries = getLineChartSeries(AxisType.Y3, "Fett");
+        LineChartSeries waterSeries = getLineChartSeries(AxisType.Y4, "Vatten");
 
         List<PersonDataDbEntry> entries = getPersonDataDbEntries();
 
@@ -131,6 +131,13 @@ public class SingleUserHistoryBean implements Serializable {
             showWarnMessage("Obs: Dina värden syns inte för någon annan användare");
         }
         showInfoMessage(createFatmanComment());
+    }
+
+    private LineChartSeries getLineChartSeries(AxisType axisType, String label) {
+        LineChartSeries series = new LineChartSeries();
+        series.setYaxis(axisType);
+        series.setLabel(label);
+        return series;
     }
 
     private LineChartSeries getLineChartSeries(AxisType axisType) {
