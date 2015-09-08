@@ -243,6 +243,7 @@ public class SingleUserHistoryBean implements Serializable {
 
         yAxis.setMin(minWeight);
         yAxis.setMax(maxWeight);
+        yAxis.setTickCount(10);
         return yAxis;
     }
 
