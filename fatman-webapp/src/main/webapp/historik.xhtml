@@ -26,8 +26,8 @@
 
     <ui:param name="headline" value="#{msg['titles.history']}"/>
 
+    <!--http://www.jqplot.com/docs/files/jqPlotOptions-txt.html-->
     <ui:define name="content">
-
         <script type="text/javascript">
             function customExtender() {
                 this.cfg.highlighter = {
@@ -36,11 +36,66 @@
                     tooltipAxes: 'y'
                 };
                 this.cfg.grid = {
+                    drawGridLines: false,
                     background: '#8b8989'
                 };
                 this.cfg.axes.yaxis = {
+                    min: 0,
+                    max: 5,
+                    tickOptions: {
+                        showGridLine: false
+                    },
                     showTicks: false,
                     showTickMarks: false
+                };
+                this.cfg.axes.y3axis = {
+                    label: 'Fett',
+                    min: 0,
+                    max: 35,
+                    tickOptions: {
+                        showGridLine: false,
+                        showMark: false,
+                        showLabel: false
+                    }
+                };
+                this.cfg.axes.y4axis = {
+                    label: 'Vatten',
+                    min: -80,
+                    max: -40,
+                    tickOptions: {
+                        showGridLine: false,
+                        showMark: false,
+                        showLabel: false
+                    },
+                    showTicks: false
+                };
+                this.cfg.series[0] = {
+                    label: 'Mycket skamligt',
+                    xaxis: 'xaxis', // either 'xaxis' or 'x2axis'.
+                    yaxis: 'yaxis', // either 'yaxis' or 'y2axis'.
+                    showMarker: false,   // render the data point markers or not.
+                    linePattern: 'dashed'
+                };
+                this.cfg.series[1] = {
+                    label: 'Mindre skamligt',
+                    xaxis: 'xaxis', // either 'xaxis' or 'x2axis'.
+                    yaxis: 'yaxis', // either 'yaxis' or 'y2axis'.
+                    showMarker: false,   // render the data point markers or not.
+                    linePattern: 'dashed'
+                };
+                this.cfg.series[2] = {
+                    label: 'Fantom',
+                    xaxis: 'xaxis', // either 'xaxis' or 'x2axis'.
+                    yaxis: 'yaxis', // either 'yaxis' or 'y2axis'.
+                    showMarker: false,   // render the data point markers or not.
+                    linePattern: 'dashed'
+                };
+                this.cfg.series[3] = {
+                    label: 'Klen pojke',
+                    xaxis: 'xaxis', // either 'xaxis' or 'x2axis'.
+                    yaxis: 'yaxis', // either 'yaxis' or 'y2axis'.
+                    showMarker: false,   // render the data point markers or not.
+                    linePattern: 'dashed'
                 };
             }
         </script>

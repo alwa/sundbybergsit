@@ -79,18 +79,18 @@ public class SingleUserHistoryBean implements Serializable {
         LOGGER.info("load()");
 
         linearModel.clear();
-        linearModel.getAxes().put(AxisType.Y, getShameAxis());
+        linearModel.getAxes().put(AxisType.Y, new LinearAxis());
         linearModel.getAxes().put(AxisType.Y2, getWeightAxis());
-        linearModel.getAxes().put(AxisType.Y3, getFatAxis());
-        linearModel.getAxes().put(AxisType.Y4, getWaterAxis());
+        linearModel.getAxes().put(AxisType.Y3, new LinearAxis());
+        linearModel.getAxes().put(AxisType.Y4, new LinearAxis());
 
-        LineChartSeries weakShameSeries = getShameLevelSeries(AxisType.Y, "Klen pojke");
-        LineChartSeries phantomShameSeries = getShameLevelSeries(AxisType.Y, "Fantom");
-        LineChartSeries lessShameSeries = getShameLevelSeries(AxisType.Y, "Mindre skamligt");
-        LineChartSeries muchShameSeries = getShameLevelSeries(AxisType.Y, "Mycket skamligt");
-        LineChartSeries weightSeries = getWeightSeries(AxisType.Y2);
-        LineChartSeries fatSeries = getFatSeries(AxisType.Y3);
-        LineChartSeries waterSeries = getWaterSeries(AxisType.Y4);
+        LineChartSeries weakShameSeries = getLineChartSeries(AxisType.Y);
+        LineChartSeries phantomShameSeries = getLineChartSeries(AxisType.Y);
+        LineChartSeries lessShameSeries = getLineChartSeries(AxisType.Y);
+        LineChartSeries muchShameSeries = getLineChartSeries(AxisType.Y);
+        LineChartSeries weightSeries = getLineChartSeries(AxisType.Y2);
+        LineChartSeries fatSeries = getLineChartSeries(AxisType.Y3);
+        LineChartSeries waterSeries = getLineChartSeries(AxisType.Y4);
 
         List<PersonDataDbEntry> entries = getPersonDataDbEntries();
 
@@ -111,9 +111,9 @@ public class SingleUserHistoryBean implements Serializable {
             String thisDay = startDate.plusDays(count).toString();
 
             if (dailyEntry != null) {
-                fatSeries.set(thisDay,  dailyEntry.getFatPercentage());
-                weightSeries.set(thisDay,  dailyEntry.getWeight());
-                waterSeries.set(thisDay,  dailyEntry.getWaterPercentage());
+                fatSeries.set(thisDay, dailyEntry.getFatPercentage());
+                weightSeries.set(thisDay, dailyEntry.getWeight());
+                waterSeries.set(thisDay, -dailyEntry.getWaterPercentage());
             }
 
             weakShameSeries.set(thisDay, 1);
@@ -125,13 +125,18 @@ public class SingleUserHistoryBean implements Serializable {
 
         addSeries(muchShameSeries, lessShameSeries, phantomShameSeries, weakShameSeries, weightSeries, fatSeries, waterSeries);
 
-        linearModel.getAxes().put(AxisType.Y, getShameAxis());
         linearModel.getAxes().put(AxisType.X, getXaxis());
 
         if (!userSettingsRepository.findSettingsForUser(userId).getShowDataToEveryone()) {
             showWarnMessage("Obs: Dina värden syns inte för någon annan användare");
         }
         showInfoMessage(createFatmanComment());
+    }
+
+    private LineChartSeries getLineChartSeries(AxisType axisType) {
+        LineChartSeries series = new LineChartSeries();
+        series.setYaxis(axisType);
+        return series;
     }
 
     public List<SelectItem> getUsers() {
@@ -208,36 +213,6 @@ public class SingleUserHistoryBean implements Serializable {
         }
     }
 
-    private LineChartSeries getShameLevelSeries(AxisType axisType, String label) {
-        LineChartSeries shameSeries = new LineChartSeries();
-        shameSeries.setLabel(label);
-        shameSeries.setYaxis(axisType);
-        shameSeries.setShowMarker(false);
-        return shameSeries;
-    }
-
-    private LineChartSeries getWeightSeries(AxisType axisType) {
-        LineChartSeries weightSeries = new LineChartSeries();
-        weightSeries.setLabel("Vikt");
-        weightSeries.setYaxis(axisType);
-        return weightSeries;
-    }
-
-    private LineChartSeries getFatSeries(AxisType axisType) {
-        LineChartSeries fatSeries = new LineChartSeries();
-        fatSeries.setLabel("Fett");
-        fatSeries.setMarkerStyle("diamond");
-        fatSeries.setYaxis(axisType);
-        return fatSeries;
-    }
-
-    private LineChartSeries getWaterSeries(AxisType axisType) {
-        LineChartSeries waterSeries = new LineChartSeries();
-        waterSeries.setLabel("Vatten");
-        waterSeries.setYaxis(axisType);
-        return waterSeries;
-    }
-
     private DateAxis getXaxis() {
         DateAxis axis = new DateAxis("Datum");
         axis.setTickAngle(-50);
@@ -249,15 +224,10 @@ public class SingleUserHistoryBean implements Serializable {
         return axis;
     }
 
-    private Axis getShameAxis() {
-        LinearAxis axis = new LinearAxis();
-        axis.setMin(0);
-        axis.setMax(5);
-        return axis;
-    }
-
     private LinearAxis getWeightAxis() {
         LinearAxis yAxis = new LinearAxis();
+        yAxis.setLabel("Vikt");
+        yAxis.setTickFormat("%d");
         FatmanDbUser user = userRepository.findUserByUserName(userId);
         Calculator<FatmanDbUser> weightFromBmiCalculator = (user1, bmi) ->
                 bmi.intValue() * (((double) user1.getHeightInCentimetres() / 100) * ((double) user1.getHeightInCentimetres() / 100));
@@ -266,20 +236,6 @@ public class SingleUserHistoryBean implements Serializable {
 
         yAxis.setMin(minWeight);
         yAxis.setMax(maxWeight);
-        return yAxis;
-    }
-
-    private LinearAxis getFatAxis() {
-        LinearAxis yAxis = new LinearAxis();
-        yAxis.setMin(0);
-        yAxis.setMax(35);
-        return yAxis;
-    }
-
-    private LinearAxis getWaterAxis() {
-        LinearAxis yAxis = new LinearAxis();
-        yAxis.setMin(30);
-        yAxis.setMax(70);
         return yAxis;
     }
 
@@ -293,7 +249,6 @@ public class SingleUserHistoryBean implements Serializable {
         String maroon = "b03060";
         return maroon + ", " + pink + ", " + white + ", " + lightBlue + ", " + red + "," + yellow + "," + blue;
     }
-
 
     private List<PersonDataDbEntry> getPersonDataDbEntries() {
         return personDataDbEntryRepository.findAllEntries(userId, fromDate, toDate);
