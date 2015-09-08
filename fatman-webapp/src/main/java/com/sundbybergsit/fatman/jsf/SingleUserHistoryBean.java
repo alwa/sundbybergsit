@@ -226,7 +226,7 @@ public class SingleUserHistoryBean implements Serializable {
 
     private LinearAxis getWeightAxis() {
         LinearAxis yAxis = new LinearAxis();
-        yAxis.setLabel("Vikt");
+        yAxis.setLabel("Vikt (kg)");
         yAxis.setTickFormat("%d");
         FatmanDbUser user = userRepository.findUserByUserName(userId);
         Calculator<FatmanDbUser> weightFromBmiCalculator = (user1, bmi) ->
