@@ -88,9 +88,9 @@ public class SingleUserHistoryBean implements Serializable {
         LineChartSeries phantomShameSeries = getLineChartSeries(AxisType.Y);
         LineChartSeries lessShameSeries = getLineChartSeries(AxisType.Y);
         LineChartSeries muchShameSeries = getLineChartSeries(AxisType.Y);
-        LineChartSeries weightSeries = getLineChartSeries(AxisType.Y2, "Vikt");
-        LineChartSeries fatSeries = getLineChartSeries(AxisType.Y3, "Fett");
-        LineChartSeries waterSeries = getLineChartSeries(AxisType.Y4, "Vatten");
+        LineChartSeries weightSeries = getLineChartSeries(AxisType.Y2, "Vikt", "filledCircle");
+        LineChartSeries fatSeries = getLineChartSeries(AxisType.Y3, "Fett", "filledDiamond");
+        LineChartSeries waterSeries = getLineChartSeries(AxisType.Y4, "Vatten", "filledSquare");
 
         List<PersonDataDbEntry> entries = getPersonDataDbEntries();
 
@@ -133,10 +133,11 @@ public class SingleUserHistoryBean implements Serializable {
         showInfoMessage(createFatmanComment());
     }
 
-    private LineChartSeries getLineChartSeries(AxisType axisType, String label) {
+    private LineChartSeries getLineChartSeries(AxisType axisType, String label, String markerStyle) {
         LineChartSeries series = new LineChartSeries();
         series.setYaxis(axisType);
         series.setLabel(label);
+        series.setMarkerStyle(markerStyle);
         return series;
     }
 
