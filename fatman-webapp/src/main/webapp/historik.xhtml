@@ -30,6 +30,11 @@
     <ui:define name="content">
         <script type="text/javascript">
             function customExtender() {
+//                this.cfg.fillBetween = {
+//                    series1: 3,
+//                    series2: 2,
+//                    color: "rgba(255, 255, 255, 0.7)"
+//                };
                 this.cfg.highlighter = {
                     show: true,
                     useAxesFormatters: false,
@@ -49,8 +54,8 @@
                     showTickMarks: false
                 };
                 this.cfg.axes.y3axis = {
-                    min: 0,
-                    max: 35,
+                    min: 2,
+                    max: 40,
                     tickOptions: {
                         showGridLine: false,
                         showMark: false,
@@ -72,28 +77,28 @@
                     xaxis: 'xaxis', // either 'xaxis' or 'x2axis'.
                     yaxis: 'yaxis', // either 'yaxis' or 'y2axis'.
                     showMarker: false,   // render the data point markers or not.
-                    linePattern: 'dashed'
+                    linePattern: [10, 10]
                 };
                 this.cfg.series[1] = {
                     label: 'Mindre skamligt',
                     xaxis: 'xaxis', // either 'xaxis' or 'x2axis'.
                     yaxis: 'yaxis', // either 'yaxis' or 'y2axis'.
                     showMarker: false,   // render the data point markers or not.
-                    linePattern: 'dashed'
+                    linePattern: [4, 4]
                 };
                 this.cfg.series[2] = {
                     label: 'Fantom',
                     xaxis: 'xaxis', // either 'xaxis' or 'x2axis'.
                     yaxis: 'yaxis', // either 'yaxis' or 'y2axis'.
                     showMarker: false,   // render the data point markers or not.
-                    linePattern: 'dashed'
+                    linePattern: 'dotted'
                 };
                 this.cfg.series[3] = {
                     label: 'Klen pojke',
                     xaxis: 'xaxis', // either 'xaxis' or 'x2axis'.
                     yaxis: 'yaxis', // either 'yaxis' or 'y2axis'.
                     showMarker: false,   // render the data point markers or not.
-                    linePattern: 'dashed'
+                    linePattern: [4, 4]
                 };
             }
         </script>
