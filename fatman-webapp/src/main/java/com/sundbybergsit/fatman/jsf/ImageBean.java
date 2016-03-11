@@ -7,8 +7,10 @@ import org.primefaces.model.StreamedContent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.enterprise.context.RequestScoped;
 import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.PhaseId;
 import javax.inject.Inject;
@@ -16,7 +18,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
 @ManagedBean(name = "imageBean")
-@ApplicationScoped
+@RequestScoped
 public class ImageBean {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ImageBean.class);

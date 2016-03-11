@@ -1,10 +1,7 @@
 package com.sundbybergsit.services;
 
 import com.sundbybergsit.FatmanRepository;
-import com.sundbybergsit.entities.FatmanDbUser;
 import com.sundbybergsit.entities.PersonDataDbEntry;
-import com.sundbybergsit.objects.PersonDataEntry;
-import com.sundbybergsit.transformers.PersonDataEntryToPersonDataDbEntryTransformer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,8 +10,6 @@ import javax.ejb.TransactionAttribute;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
-import javax.transaction.SystemException;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 

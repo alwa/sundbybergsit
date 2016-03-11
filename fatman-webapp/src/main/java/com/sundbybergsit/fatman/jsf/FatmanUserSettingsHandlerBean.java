@@ -12,7 +12,6 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import java.io.Serializable;
 
-@ViewScoped
 @ManagedBean(name = "fatmanUserSettingsBean")
 public class FatmanUserSettingsHandlerBean implements Serializable {
 

@@ -7,15 +7,16 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
+import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import java.util.logging.Logger;
 
-@RequestScoped
+@ViewScoped
 @ManagedBean(name = "fileUploadController")
 public class FileUploadController {
 
-    private Logger logger = Logger.getLogger(FileUploadController.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(FileUploadController.class.getName());
 
     @Inject
     private ImageRepository repository;
@@ -27,6 +28,8 @@ public class FileUploadController {
     private UploadedFile fatImage;
 
     public void uploadPhantomImage() {
+        LOGGER.info("uploadPhantomImage()");
+
         if (phantomImage != null) {
             FacesMessage msg = new FacesMessage("Bilden laddades upp", phantomImage.getFileName() + " is uploaded.");
             repository.updatePhantomImage(loginBean.getUserId(), phantomImage.getContents());
@@ -35,6 +38,8 @@ public class FileUploadController {
     }
 
     public void uploadFatImage() {
+        LOGGER.info("uploadFatImage()");
+
         if (fatImage != null) {
             FacesMessage msg = new FacesMessage("Bilden laddades upp", fatImage.getFileName() + " is uploaded.");
             repository.updateFatImage(loginBean.getUserId(), fatImage.getContents());
@@ -62,4 +67,5 @@ public class FileUploadController {
     public void setLoginBean(FatmanLoginBean loginBean) {
         this.loginBean = loginBean;
     }
+
 }

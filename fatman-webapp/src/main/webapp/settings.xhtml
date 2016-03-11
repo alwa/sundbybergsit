@@ -42,7 +42,7 @@
         <h:form enctype="multipart/form-data">
             <p:fileUpload value="#{fileUploadController.phantomImage}" mode="simple"/>
             <p:commandButton id="uploadPhantomImageButton" value="Submit" ajax="false"
-                             actionListener="#{fileUploadController.uploadPhantomImage()}"/>
+                             action="#{fileUploadController.uploadPhantomImage()}"/>
         </h:form>
 
         <h:outputText value="#{msg['titles.fatImage']}"/>

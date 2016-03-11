@@ -14,6 +14,7 @@ import javax.persistence.NoResultException;
 
 @Stateless
 public class JpaUserSettingsRepository implements UserSettingsRepository {
+
     private static final Logger LOGGER = LoggerFactory.getLogger(JpaUserSettingsRepository.class);
 
     @Inject
@@ -22,6 +23,8 @@ public class JpaUserSettingsRepository implements UserSettingsRepository {
 
     @Override
     public UserDbSettings findSettingsForUser(String userId) {
+        LOGGER.info("findSettingsForUser()");
+
         try {
             return entityManager.createQuery("select settings from UserDbSettings settings where settings.fatmanUser.username = :userId", UserDbSettings.class)
                     .setParameter("userId", userId)
@@ -33,6 +36,8 @@ public class JpaUserSettingsRepository implements UserSettingsRepository {
 
     @Override
     public UserDbSettings findSettingsForUser(long userId) {
+        LOGGER.info("findSettingsForUser()");
+
         try {
             return entityManager.createQuery("select settings from UserDbSettings settings where settings.fatmanUser.id = :id", UserDbSettings.class)
                     .setParameter("id", userId)
@@ -46,6 +51,8 @@ public class JpaUserSettingsRepository implements UserSettingsRepository {
     @Override
     @TransactionAttribute
     public void update(UserDbSettings settings) {
+        LOGGER.info(String.format("update(settings=[%s])", settings));
+
         entityManager.persist(settings);
     }
 
@@ -66,4 +73,5 @@ public class JpaUserSettingsRepository implements UserSettingsRepository {
             return null;
         }
     }
+
 }
