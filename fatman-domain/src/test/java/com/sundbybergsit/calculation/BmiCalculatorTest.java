@@ -1,13 +1,13 @@
 package com.sundbybergsit.calculation;
 
 import com.sundbybergsit.entities.FatmanDbUser;
-import org.junit.Test;
+import org.junit.gen5.api.Test;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.gen5.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class BmiCalculatorTest {
+class BmiCalculatorTest {
 
     @Test
     public void bmiCalculated() throws Exception {
@@ -16,7 +16,7 @@ public class BmiCalculatorTest {
         Calculator<FatmanDbUser> bmiCalculator = new Calculator<FatmanDbUser>() {
             @Override
             public Number calculate(FatmanDbUser user, Number weight) {
-                return (float)weight / (((double)user.getHeightInCentimetres()/100) * ((double)user.getHeightInCentimetres()/100));
+                return (float) weight / (((double) user.getHeightInCentimetres() / 100) * ((double) user.getHeightInCentimetres() / 100));
             }
         };
 //        Calculator<FatmanDbUser> bmiCalculator =

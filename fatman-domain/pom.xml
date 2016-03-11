@@ -31,15 +31,11 @@
 
     <build>
         <plugins>
-            <plugin>
-                <groupId>org.apache.openjpa</groupId>
-                <artifactId>openjpa-maven-plugin</artifactId>
-                <version>2.2.0</version>
-            </plugin>
             <plugin> <!-- needed otherwise it will not work at runtime -->
                 <!--http://openjpa.apache.org/enhancement-with-maven.html-->
                 <groupId>org.apache.openjpa</groupId>
                 <artifactId>openjpa-maven-plugin</artifactId>
+                <version>2.2.0</version>
                 <configuration>
                     <includes>com/sundbybergsit/entities/*.class</includes>
                     <addDefaultConstructor>true</addDefaultConstructor>

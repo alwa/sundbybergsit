@@ -7,7 +7,7 @@ import org.apache.cxf.jaxrs.impl.ResponseBuilderImpl;
 import org.apache.tomee.embedded.EmbeddedTomEEContainer;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.gen5.api.Test;
 
 import javax.annotation.Resource;
 import javax.ejb.embeddable.EJBContainer;
@@ -26,7 +26,7 @@ import java.util.Properties;
 
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.nullValue;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 
 public class AuthenticateResourceTest {

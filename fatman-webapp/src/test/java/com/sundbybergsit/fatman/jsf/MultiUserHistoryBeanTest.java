@@ -5,10 +5,9 @@ import com.sundbybergsit.entities.PersonDataDbEntry;
 import com.sundbybergsit.entities.UserDbSettings;
 import com.sundbybergsit.fatman.PersonDataDbEntryBuilder;
 import com.sundbybergsit.services.*;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.gen5.api.BeforeEach;
+import org.junit.gen5.api.Disabled;
+import org.junit.gen5.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
@@ -22,12 +21,11 @@ import java.sql.Date;
 import java.util.*;
 
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
 
-@RunWith(MockitoJUnitRunner.class)
-public class MultiUserHistoryBeanTest {
+class MultiUserHistoryBeanTest {
 
     private MultiUserHistoryBean bean;
 
@@ -54,7 +52,7 @@ public class MultiUserHistoryBeanTest {
 
     private Date today = new Date(new java.util.Date().getTime());
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
 
@@ -74,7 +72,7 @@ public class MultiUserHistoryBeanTest {
     }
 
     @Test
-    @Ignore("Obsolete behaviour")
+    @Disabled("Obsolete behaviour")
     public void twentyEntriesInResultWhenRetrievingAllDataThatContainTwentyOneEntries() throws Exception {
         when(personDataDbEntryRepository.findAllEntries(anyString(), any(Date.class), any(Date.class))).thenReturn(createFakeEntries(21));
 
@@ -89,7 +87,7 @@ public class MultiUserHistoryBeanTest {
     }
 
     @Test
-    @Ignore("Obsolete behaviour")
+    @Disabled("Obsolete behaviour")
     public void twentyEntriesInResultWhenRetrievingAllDataThatContainFortyEntries() throws Exception {
         when(personDataDbEntryRepository.findAllEntries(anyString(), any(Date.class), any(Date.class))).thenReturn(createFakeEntries(40));
 

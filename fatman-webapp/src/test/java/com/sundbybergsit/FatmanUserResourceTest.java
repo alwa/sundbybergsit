@@ -6,7 +6,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.cxf.jaxrs.client.JAXRSClientFactory;
 import org.apache.cxf.jaxrs.client.ResponseReader;
 import org.apache.tomee.embedded.EmbeddedTomEEContainer;
-import org.junit.*;
+import org.junit.gen5.api.*;
 
 import javax.ejb.embeddable.EJBContainer;
 import javax.ws.rs.*;
@@ -19,16 +19,16 @@ import java.util.List;
 import java.util.Properties;
 
 import static junit.framework.Assert.assertNotNull;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
 
-@Ignore("javax.ejb.EJBException: Provider error. No provider found")
-public class FatmanUserResourceTest {
+@Disabled("javax.ejb.EJBException: Provider error. No provider found")
+class FatmanUserResourceTest {
 
     private static EJBContainer container;
     private static File webApp;
 
-    @BeforeClass
+    @BeforeAll
     public static void start() throws Exception {
         webApp = createWebApp();
         Properties p = new Properties();
@@ -39,7 +39,7 @@ public class FatmanUserResourceTest {
         container = EJBContainer.createEJBContainer(p);
     }
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         UserServiceClientAPI testClient = createTestClient();
         testClient.clear();
@@ -76,7 +76,7 @@ public class FatmanUserResourceTest {
     }
 
     @Test
-    @Ignore("Fattar inte vad som är fel")
+    @Disabled("Fattar inte vad som är fel")
     public void updateSettings() throws Exception {
         UserServiceClientAPI client = createTestClient();
         long id = addUser(client);
@@ -177,7 +177,7 @@ public class FatmanUserResourceTest {
         Response delete(@PathParam("id") long id);
     }
 
-    @AfterClass
+    @AfterAll
     public static void stop() {
         if (container != null) {
             container.close();

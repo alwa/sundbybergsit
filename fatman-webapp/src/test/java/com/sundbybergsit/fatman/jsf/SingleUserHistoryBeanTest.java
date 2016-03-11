@@ -4,32 +4,26 @@ import com.sundbybergsit.entities.FatmanDbUser;
 import com.sundbybergsit.entities.PersonDataDbEntry;
 import com.sundbybergsit.entities.UserDbSettings;
 import com.sundbybergsit.services.*;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.gen5.api.BeforeEach;
+import org.junit.gen5.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.mockito.runners.MockitoJUnitRunner;
 import org.primefaces.model.chart.LineChartModel;
 import org.primefaces.model.chart.LineChartSeries;
 
 import javax.faces.context.FacesContext;
 import java.sql.Date;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
 
-@RunWith(MockitoJUnitRunner.class)
-public class SingleUserHistoryBeanTest {
+class SingleUserHistoryBeanTest {
 
     private SingleUserHistoryBean bean;
 
@@ -54,9 +48,10 @@ public class SingleUserHistoryBeanTest {
     @Mock
     private FatmanLoginBean loginBean;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
+
         bean = spy(new SingleUserHistoryBean());
         bean.setPersonDataDbEntryRepository(personDataDbEntryRepository);
         bean.setUserRepository(userRepository);

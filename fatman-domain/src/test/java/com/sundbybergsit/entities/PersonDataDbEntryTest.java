@@ -1,19 +1,18 @@
 package com.sundbybergsit.entities;
 
-import org.junit.Test;
+import org.junit.gen5.api.Test;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
-
 import java.util.Date;
 import java.util.Set;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.*;
 
-public class PersonDataDbEntryTest {
+class PersonDataDbEntryTest {
 
     @Test
     public void testValidation() {

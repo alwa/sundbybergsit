@@ -1,13 +1,14 @@
 package com.sundbybergsit.services;
 
-import org.junit.Test;
+import org.junit.gen5.api.Test;
 
 import java.util.Date;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
+import static org.junit.gen5.api.Assertions.expectThrows;
 
-public class JpaUserStatisticsServiceTest {
+class JpaUserStatisticsServiceTest {
 
     @Test
     public void calculateDiffInPercentages() throws Exception {
@@ -18,29 +19,41 @@ public class JpaUserStatisticsServiceTest {
         assertThat(result, is(38));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void fatDiffNotOkayWithNullUsername() throws Exception {
         JpaUserStatisticsService service = new JpaUserStatisticsService();
         Date from = new Date();
         Date to = new Date();
-        service.fatDiff(null, from, to);
+
+        expectThrows(IllegalArgumentException.class, () -> {
+            service.fatDiff(null, from, to);
+        });
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void totalDiffNotOkayWithNullUsername() throws Exception {
         JpaUserStatisticsService service = new JpaUserStatisticsService();
-        service.totalFatDiff(null);
+
+        expectThrows(IllegalArgumentException.class, () -> {
+            service.totalFatDiff(null);
+        });
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void notOkayToCalculateDiffWithZeroStartPercentage() throws Exception {
         JpaUserStatisticsService service = new JpaUserStatisticsService();
-        service.calculateDiffInPercentages(0F, 25.0F);
+
+        expectThrows(IllegalArgumentException.class, () -> {
+            service.calculateDiffInPercentages(0F, 25.0F);
+        });
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void notOkayToCalculateDiffWithZeroEndPercentage() throws Exception {
         JpaUserStatisticsService service = new JpaUserStatisticsService();
-        service.calculateDiffInPercentages(30.0F, 0F);
+
+        expectThrows(IllegalArgumentException.class, () -> {
+            service.calculateDiffInPercentages(30.0F, 0F);
+        });
     }
 }
