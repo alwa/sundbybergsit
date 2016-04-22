@@ -22,7 +22,7 @@
             <groupId>com.sundbybergsit</groupId>
             <artifactId>data-transfer-objects</artifactId>
         </dependency>
-        <!-- Bundled with TomEE+ 1.7.2-->
+        <!-- Bundled with TomEE+ 1.7.4-->
         <dependency>
             <groupId>org.apache.cxf</groupId>
             <artifactId>cxf-bundle-jaxrs</artifactId>

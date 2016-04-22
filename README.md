@@ -7,7 +7,7 @@ Just nu så existerar bara en webapplikation: [Fatman](http://www.sundbybergsit.
 [![Build Status](https://travis-ci.org/alwa/sundbybergsit.svg?branch=master)](https://travis-ci.org/alwa/sundbybergsit)
 
 ## Beroenden
-- [TomEE Plus 1.7.2](http://openejb.apache.org/apache-tomee.html)
+- [TomEE Plus 1.7.4](http://openejb.apache.org/apache-tomee.html)
 - [Maven 3.2.5+](https://maven.apache.org/)
 - [JDK 8](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
 - [JUnit 5](https://github.com/junit-team/junit5)

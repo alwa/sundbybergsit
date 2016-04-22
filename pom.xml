@@ -28,8 +28,8 @@
         <java.version>1.8</java.version>
         <junit.gen5.version>5.0.0-ALPHA</junit.gen5.version>
         <openejb.jaxrs.application>false</openejb.jaxrs.application>
-        <tomee.plus.version>1.7.2</tomee.plus.version>
-        <tomcat.version>7.0.62</tomcat.version>
+        <tomee.plus.version>1.7.4</tomee.plus.version>
+        <tomcat.version>7.0.68</tomcat.version>
     </properties>
 
     <repositories>
