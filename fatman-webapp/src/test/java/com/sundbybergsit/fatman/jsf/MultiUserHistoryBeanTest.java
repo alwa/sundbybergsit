@@ -8,11 +8,12 @@ import com.sundbybergsit.services.*;
 import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.Disabled;
 import org.junit.gen5.api.Test;
+import org.junit.gen5.junit4.runner.JUnit5;
+import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.mockito.runners.MockitoJUnitRunner;
 import org.primefaces.model.chart.LineChartModel;
 import org.primefaces.model.chart.LineChartSeries;
 
@@ -20,12 +21,13 @@ import javax.faces.context.FacesContext;
 import java.sql.Date;
 import java.util.*;
 
-import static org.hamcrest.core.Is.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.Is.is;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
 
-class MultiUserHistoryBeanTest {
+@RunWith(JUnit5.class)
+public class MultiUserHistoryBeanTest {
 
     private MultiUserHistoryBean bean;
 

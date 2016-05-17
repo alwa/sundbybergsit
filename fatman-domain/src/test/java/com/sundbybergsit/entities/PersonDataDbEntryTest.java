@@ -1,6 +1,8 @@
 package com.sundbybergsit.entities;
 
 import org.junit.gen5.api.Test;
+import org.junit.gen5.junit4.runner.JUnit5;
+import org.junit.runner.RunWith;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
@@ -12,7 +14,8 @@ import java.util.Set;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
-class PersonDataDbEntryTest {
+@RunWith(JUnit5.class)
+public class PersonDataDbEntryTest {
 
     @Test
     public void testValidation() {

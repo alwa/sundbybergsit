@@ -6,6 +6,8 @@ import com.sundbybergsit.entities.UserDbSettings;
 import com.sundbybergsit.services.*;
 import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.Test;
+import org.junit.gen5.junit4.runner.JUnit5;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.primefaces.model.chart.MeterGaugeChartModel;
@@ -20,7 +22,8 @@ import static org.hamcrest.core.IsNull.notNullValue;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
 
-class FatmanDataHandlerBeanTest {
+@RunWith(JUnit5.class)
+public class FatmanDataHandlerBeanTest {
 
     private FatmanDataHandlerBean handler;
 

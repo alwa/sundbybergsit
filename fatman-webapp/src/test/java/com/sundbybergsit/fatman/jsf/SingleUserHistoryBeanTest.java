@@ -6,6 +6,8 @@ import com.sundbybergsit.entities.UserDbSettings;
 import com.sundbybergsit.services.*;
 import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.Test;
+import org.junit.gen5.junit4.runner.JUnit5;
+import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
@@ -23,7 +25,8 @@ import static org.hamcrest.core.Is.is;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
 
-class SingleUserHistoryBeanTest {
+@RunWith(JUnit5.class)
+public class SingleUserHistoryBeanTest {
 
     private SingleUserHistoryBean bean;
 

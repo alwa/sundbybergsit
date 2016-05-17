@@ -1,6 +1,8 @@
 package com.sundbybergsit.services;
 
 import org.junit.gen5.api.Test;
+import org.junit.gen5.junit4.runner.JUnit5;
+import org.junit.runner.RunWith;
 
 import java.util.Date;
 
@@ -8,7 +10,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.junit.gen5.api.Assertions.expectThrows;
 
-class JpaUserStatisticsServiceTest {
+@RunWith(JUnit5.class)
+public class JpaUserStatisticsServiceTest {
 
     @Test
     public void calculateDiffInPercentages() throws Exception {

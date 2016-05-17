@@ -7,6 +7,8 @@ import org.apache.cxf.jaxrs.client.JAXRSClientFactory;
 import org.apache.cxf.jaxrs.client.ResponseReader;
 import org.apache.tomee.embedded.EmbeddedTomEEContainer;
 import org.junit.gen5.api.*;
+import org.junit.gen5.junit4.runner.JUnit5;
+import org.junit.runner.RunWith;
 
 import javax.ejb.embeddable.EJBContainer;
 import javax.ws.rs.*;
@@ -23,7 +25,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
 @Disabled("javax.ejb.EJBException: Provider error. No provider found")
-class FatmanUserResourceTest {
+@RunWith(JUnit5.class)
+public class FatmanUserResourceTest {
 
     private static EJBContainer container;
     private static File webApp;
